@@ -44,6 +44,7 @@ export default handle(async (req, res) => {
     for (let i = 0; i < (pf || []).length; i += 2) {
       if (!done.has(pf[i])) { try { out.pending.push(JSON.parse(pf[i + 1]).name); } catch {} }
     }
+    out.pending.sort((x, y) => x.localeCompare(y, 'de')); // feste Reihenfolge
   }
   res.status(200).json(out);
 });
