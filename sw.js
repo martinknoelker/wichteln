@@ -8,6 +8,11 @@ self.addEventListener('push', (e) => {
     body: d.body || '',
     tag: d.tag || 'wichteln',
     data: { url: d.url || '/' },
+    icon: '/api/icon?s=192',
+    badge: '/api/icon?s=96',
+    lang: 'de',
+    vibrate: [120, 60, 120],
+    renotify: true,
   }));
 });
 self.addEventListener('notificationclick', (e) => {
