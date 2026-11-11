@@ -36,8 +36,8 @@ export default handle(async (req, res) => {
     const lock = await redis('SET', k(id, 'rl:' + token), '1', 'NX', 'EX', '600');
     if (lock !== 'OK') return res.status(200).json({ result: 'wait' });
     const r = await notify(id, {
-      title: '⏰ Dein Los wartet noch',
-      body: `Bei „${meta.name}“ hast du noch nicht gezogen. Der Organisator erinnert dich – jetzt ziehen!`,
+      title: '🎄 Dein Wichtel-Los wartet noch',
+      body: `Der Organisator von „${meta.name}“ erinnert dich: Zieh jetzt dein Los und finde heraus, wen du beschenkst. 🎁`,
       url: `/?p=${id}`,
       tag: 'wichtel-remind-' + id,
     }, [token]);
