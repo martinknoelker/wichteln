@@ -6,6 +6,12 @@
 <title>Wichteln ✦ Weihnachtslosung</title>
 <meta name="description" content="Weihnachts-Wichteln: Feier erstellen, Link teilen, losen – wer wen beschenkt, mit Farbe, Buchstabe, Joker und Engel.">
 <meta name="theme-color" content="#0b1f19">
+<link rel="manifest" href="/api/manifest" id="mf">
+<link rel="apple-touch-icon" href="/api/icon?s=192">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wichteln">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -183,6 +189,31 @@
   #fx.joker .ttl{color:#ffd86b}
   #fx.joker .sb{color:#fff}
   @keyframes fxtxt{from{opacity:0;transform:translateY(24px) scale(.9)}}
+  .xmas a{display:inline-block;margin-bottom:10px;padding:8px 16px;border-radius:999px;border:1px solid rgba(232,194,122,.35);background:rgba(232,194,122,.07);font-family:Inter,system-ui,sans-serif;font-style:normal;font-size:13px;color:var(--gold);text-decoration:none}
+  .xmas a:hover{background:rgba(232,194,122,.14)}
+  .xmas .gr{display:block}
+  .inst{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 18px 12px}
+  .inst > div{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:14px 14px 14px 16px;border-radius:18px;background:rgba(232,194,122,.08);border:1px solid rgba(232,194,122,.3)}
+  .inst .ic{font-size:28px}
+  .inst .tx{flex:1;min-width:190px}
+  .inst b{display:block;font-family:Fraunces,serif;font-size:16px;margin-bottom:2px}
+  .inst p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+  .inst .acts{display:flex;align-items:center;gap:6px;margin-left:auto}
+  .inst .x{background:none;border:0;color:var(--faint);font-size:16px;padding:8px;cursor:pointer}
+  .modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.62);display:flex;align-items:flex-end;justify-content:center;padding:12px;animation:fxin .3s ease both}
+  .modal .box{width:min(520px,100%);max-height:92vh;overflow:auto;background:#0e281f;border:1px solid rgba(232,194,122,.5);border-radius:24px;padding:24px 22px 20px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:modalin .4s cubic-bezier(.2,1.1,.4,1) both}
+  @keyframes modalin{from{opacity:0;transform:translateY(40px)}}
+  .modal h2{margin:0 0 14px}
+  .isteps{list-style:none;margin:0 0 18px;padding:0;counter-reset:s}
+  .isteps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:10px 0;font-size:15px;line-height:1.5;color:var(--ink)}
+  .isteps li::before{content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1d07;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .isteps svg{vertical-align:-5px;margin:0 2px}
+  .slots{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:12px;margin:12px 0 0}
+  .slot{border-radius:18px;border:1px solid var(--line);background:rgba(0,0,0,.22);padding:14px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;min-height:176px}
+  .slot .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .swatch.mini{width:76px;height:76px;transition:background .6s}
+  .cname.mini{font-size:20px}
+  .bigletter.mini{font-size:88px}
   .loading{display:flex;justify-content:center;padding:60px 0}
   .spinner{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.12);border-top-color:var(--gold);animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -196,7 +227,8 @@
 <body>
 <canvas id="snow"></canvas>
 <main id="app"><div class="loading"><div class="spinner"></div></div></main>
-<footer class="xmas"><span>✦</span>Martin wünscht Dir frohe Weihnachten<span>✦</span></footer>
+<div class="inst" id="inst"></div>
+<footer class="xmas"><a href="/" id="newparty">✦ Eigene Feier erstellen</a><span class="gr"><span>✦</span>Martin wünscht Dir frohe Weihnachten<span>✦</span></span></footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -457,7 +489,7 @@
     const sig = JSON.stringify(s);
     if (sig !== lastAdmin) {
       lastAdmin = sig;
-      document.title = s.name + ' · Verwaltung';
+      document.title = s.name + ' · Wichteln';
       const full = s.count >= s.total;
       const pLink = linkFor(PID);
       const joined = !!LS.get(tokKey(PID));
@@ -659,7 +691,7 @@
       try {
         const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
-        lastPart = ''; exSet = null; pushSynced = false;
+        lastPart = ''; exSet = null; pushSynced = false; setManifest();
         participantView();
       } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
     };
@@ -703,7 +735,7 @@
       try {
         const d = await post('claim', { id: PID, name: who, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
-        claimMode = false; lastPart = ''; exSet = null; pushSynced = false;
+        claimMode = false; lastPart = ''; exSet = null; pushSynced = false; setManifest();
         participantView();
       } catch (ex) { err.textContent = ex.message; upd(); }
     };
@@ -767,7 +799,24 @@
     return { stop: () => clearInterval(t) };
   }
 
+  let jokerTimer = null;
+  function jokerHelp(set) {
+    clearInterval(jokerTimer);
+    const FC = ['Rot', 'Gold', 'Tannengrün', 'Silber', 'Blau', 'Weiß', 'Bordeaux', 'Rosa', 'Kupfer', 'Türkis', 'Lila', 'Orange'];
+    const FL = 'ABCDEFGHIKLMNOPRSTUW';
+    const step = () => {
+      const jc = document.getElementById('jc'), jl = document.getElementById('jl'), jt = document.getElementById('jt');
+      if (!jc && !jl && !jt) { clearInterval(jokerTimer); return; }
+      const col = FC[Math.floor(Math.random() * FC.length)], ltr = FL[Math.floor(Math.random() * FL.length)];
+      if (jc) { jc.style.background = colorCss(col) || 'transparent'; document.getElementById('jn').textContent = col; }
+      if (jl) jl.textContent = ltr;
+      if (jt) jt.textContent = example(ltr, set.useColor ? col : '', 'j' + Math.random());
+    };
+    step();
+    jokerTimer = setInterval(step, 1800);
+  }
   function resultView(s, me, foot, fresh) {
+    clearInterval(jokerTimer);
     const d = me.draw;
     const { color, letter, target, joker, loser } = d;
     const set = s.settings;
@@ -779,7 +828,8 @@
       <p class="eyebrow">${esc(s.name)} · ${esc(me.name)}</p>
       <h2>Dein Los</h2>
       ${target ? `<div class="who"><span class="lbl">Du beschenkst</span><div class="nm">${esc(target)}</div><span class="em">🎁</span></div>` : ''}
-      ${joker ? `<div class="banner joker big"><span class="ic">🃏</span><div><b>Du hast den Joker!</b><p>${target ? `Such dir das Geschenk für ${esc(target)} ganz frei aus` : 'Such dir dein Geschenk ganz frei aus'} – Farbe und Buchstabe gelten für dich nicht. Verrate es aber niemandem, bis ihr schenkt.</p></div></div>` : ''}
+      ${joker ? `<div class="banner joker big"><span class="ic">🃏</span><div><b>Du hast den Joker!</b><p>${target ? `Du suchst das Geschenk für ${esc(target)} aus – ganz frei: ohne Farbe, ohne Buchstabe, ohne Regeln.` : 'Du suchst dir dein Geschenk ganz frei aus – ohne Farbe, ohne Buchstabe, ohne Regeln.'} Verrate es aber niemandem, bis ihr schenkt.</p></div></div>
+      ${(set.useColor || set.useLetter) ? `<div class="example jhelp"><p class="t">🎰 Zu viel Freiheit?</p><p class="sub" style="margin:0">Falls dir die Entscheidung zu schwer fällt: ein paar völlig unverbindliche Vorschläge. Sie wechseln so lange, bis du glücklich bist.</p><div class="slots">${set.useColor ? `<div class="slot"><span class="lbl">Farbe</span><div class="swatch mini" id="jc"></div><div class="cname mini" id="jn"></div></div>` : ''}${set.useLetter ? `<div class="slot"><span class="lbl">Buchstabe</span><div class="bigletter mini" id="jl">?</div></div>` : ''}</div>${set.useLetter ? `<p class="ex" id="jt" style="margin:12px 0 0"></p>` : ''}</div>` : ''}` : ''}
       ${tiles ? `<div class="reveal ${fresh ? 'revealed' : ''} ${tiles === 1 ? 'single' : ''}">
         ${color ? `<div class="tile"><span class="lbl">Farbe</span><div class="swatch ${known ? '' : 'unknown'}" ${swatchStyle(color)}></div><div class="cname">${esc(color)}</div></div>` : ''}
         ${letter ? `<div class="tile"><span class="lbl">Buchstabe</span><div class="bigletter">${esc(letter)}</div></div>` : ''}
@@ -788,6 +838,7 @@
       ${loser ? `<div class="banner angel"><span class="ic">😇</span><div><b>Du bist der Engel!</b><p>Herzlichen Glückwunsch – ausgerechnet dich hat der Himmel erwählt. Zusätzlich zu deinem Geschenk bringst du für alle anderen (${others} ${others === 1 ? 'Person' : 'Personen'}) je eine Kleinigkeit mit, höchstens 1–2 € pro Person. Gute Taten sind eben dein Ding … und den Heiligenschein behältst du dabei natürlich auf. ✨</p></div></div>` : ''}
       <p class="hint">Psst – nicht verraten! Auf einem anderen Gerät: Link öffnen → „Ich bin schon dabei“ → Name und PIN, dann siehst du dein Los wieder.</p>
     </section>${foot}`;
+    if (joker) jokerHelp(set);
     if (fresh) {
       burst();
       if (joker || loser) setTimeout(() => fx(loser ? 'angel' : 'joker'), 2600);
@@ -858,6 +909,57 @@
     }, 1200);
   }
 
+  /* ---------- App-Manifest & Startbildschirm-Hinweis ---------- */
+  function setManifest() {
+    if (!PID) return;
+    const u = new URLSearchParams({ p: PID });
+    if (ADMIN) u.set('admin', ADMIN);
+    else { const t = LS.get(tokKey(PID)); if (t) u.set('t', t); }
+    document.getElementById('mf').href = '/api/manifest?' + u;
+  }
+  const STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const ANDROID = /android/i.test(navigator.userAgent);
+  let deferredInstall = null;
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; renderInst(); });
+  addEventListener('appinstalled', () => { deferredInstall = null; renderInst(); });
+  const SHARE_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8c27a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>';
+  const PLUS_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8c27a" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+  function renderInst() {
+    const el = document.getElementById('inst');
+    const dis = Number(LS.get('wichtel:inst') || 0);
+    if (STANDALONE || !(IOS || ANDROID) || (dis && Date.now() - dis < 3 * 864e5)) { el.innerHTML = ''; return; }
+    el.innerHTML = `<div><span class="ic">📲</span><div class="tx"><b>Auf dem Startbildschirm läuft es besser</b><p>Als App bleibt dein Los griffbereit – und Benachrichtigungen funktionieren zuverlässig.</p></div><div class="acts"><button class="btn small primary" id="instgo">${IOS ? 'So geht’s' : 'Installieren'}</button><button class="x" id="instx" aria-label="Hinweis schließen">✕</button></div></div>`;
+    document.getElementById('instx').onclick = () => { LS.set('wichtel:inst', String(Date.now())); renderInst(); };
+    document.getElementById('instgo').onclick = async () => {
+      if (!IOS && deferredInstall) {
+        deferredInstall.prompt();
+        try { await deferredInstall.userChoice; } catch {}
+        deferredInstall = null; renderInst();
+        return;
+      }
+      installSteps();
+    };
+  }
+  function installSteps() {
+    const steps = IOS
+      ? [`Tippe in der Leiste auf das Teilen-Symbol ${SHARE_SVG} (bei manchen Browsern oben rechts).`,
+         `Scrolle etwas nach unten und wähle <b>„Zum Home-Bildschirm“</b> ${PLUS_SVG}.`,
+         `Tippe oben rechts auf <b>„Hinzufügen“</b>.`,
+         `Öffne Wichteln jetzt über das neue Icon und erlaube dort die <b>Benachrichtigungen</b>.`]
+      : [`Tippe oben rechts im Browser auf das Menü <b>⋮</b>.`,
+         `Wähle <b>„App installieren“</b> oder <b>„Zum Startbildschirm hinzufügen“</b>.`,
+         `Bestätige mit <b>„Installieren“</b>.`,
+         `Öffne Wichteln über das neue Icon und erlaube die <b>Benachrichtigungen</b>.`];
+    const m = document.createElement('div');
+    m.className = 'modal';
+    m.innerHTML = `<div class="box"><p class="eyebrow">Wichteln als App</p><h2>Zum Startbildschirm hinzufügen</h2><ol class="isteps">${steps.map(x => `<li><span>${x}</span></li>`).join('')}</ol><button class="btn primary" id="mok">Verstanden</button></div>`;
+    document.body.appendChild(m);
+    const close = () => m.remove();
+    m.querySelector('#mok').onclick = close;
+    m.onclick = e => { if (e.target === m) close(); };
+  }
+
   /* ---------- Schnee ---------- */
   const cv = document.getElementById('snow'), ctx = cv.getContext('2d');
   let W, H, flakes = [], extra = [];
@@ -896,6 +998,9 @@
   if (!reduce) tick();
 
   /* ---------- Start ---------- */
+  setManifest();
+  renderInst();
+  if (!PID) document.getElementById('newparty').style.display = 'none';
   if (!PID) homeView();
   else if (ADMIN) adminView();
   else participantView();
