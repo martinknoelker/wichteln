@@ -529,8 +529,8 @@
           <p class="hint" style="margin:0 0 12px">Nur für dich sichtbar – die Teilnehmer erfahren nichts davon. Die Animation mischt weiterhin alle Namen, aber gezogen wird nie jemand, den du hier abgewählt hast.</p>
           ${s.names.length < 3 ? `<p class="hint">Sobald sich mehr Leute eingetragen haben, kannst du das hier einstellen.</p>` : [...s.names].sort((a, b) => a.localeCompare(b, 'de')).map(g => {
             const sel = (s.adminEx || {})[g] || [];
-            return `<details class="axp" data-g="${esc(g)}" ${axOpen.has(g) ? 'open' : ''}><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
-              <div class="chips" style="justify-content:flex-start">${s.names.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
+            return `<details class="axp" data-g="${esc(g)}" open><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
+              <small style="color:var(--muted)">${esc(g)} darf nicht ziehen:</small><div class="chips" style="justify-content:flex-start">${s.names.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
           }).join('')}
           <p class="err" id="axerr"></p>
         </section>`;
@@ -616,11 +616,12 @@
   async function participantView() {
     const token = LS.get(tokKey(PID));
     let s;
-    try { s = await status(token ? { token } : {}); }
+    try { s = await status({ ...(token ? { token } : {}), ...(LS.get(admKey(PID)) ? { admin: LS.get(admKey(PID)) } : {}) }); }
     catch (e) { if (!app.querySelector('.card')) return errorView(e.message); schedule(participantView, 8000); return; }
 
     if (token && !s.me) LS.del(tokKey(PID));
     const me = s.me;
+    if (me && me.adminKey && !qs.get('me')) { LS.set(admKey(PID), me.adminKey); location.replace(adminLinkFor(PID, me.adminKey)); return; }
     if (me) pushSync();
     const adminLink = LS.get(admKey(PID));
     const foot = `<p class="foot">${adminLink ? `<a href="/?p=${esc(PID)}&admin=${esc(adminLink)}">Zur Verwaltung</a>` : ''}</p>`;
@@ -733,7 +734,7 @@
         const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
         lastPart = ''; exSet = null; pushSynced = false; setManifest();
-        if (LS.get(admKey(PID))) { location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
+        if (LS.get(admKey(PID))) { try { await status({ token: d.token, admin: LS.get(admKey(PID)) }); } catch {} location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
         participantView();
       } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
     };
@@ -778,7 +779,7 @@
         const d = await post('claim', { id: PID, name: who, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
         claimMode = false; lastPart = ''; exSet = null; pushSynced = false; setManifest();
-        if (LS.get(admKey(PID))) { location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
+        if (LS.get(admKey(PID))) { try { await status({ token: d.token, admin: LS.get(admKey(PID)) }); } catch {} location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
         participantView();
       } catch (ex) { err.textContent = ex.message; upd(); }
     };
