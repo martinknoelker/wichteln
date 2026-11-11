@@ -18,6 +18,7 @@ export default handle(async (req, res) => {
   if (s.useColor) {
     const color = clean(b.color, 30);
     if (!color) fail(400, 'Bitte gib eine Farbe ein.');
+    if (/^(bunt\w*|mehrfarbig\w*|multi\s?colou?r\w*|regenbogen\w*|rainbow)$/i.test(color)) fail(400, 'Bunt gilt nicht – bitte wähle eine einzelne Farbe.');
     person.color = color;
   }
   if (s.useLetter) {
