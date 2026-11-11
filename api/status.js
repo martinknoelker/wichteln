@@ -1,4 +1,4 @@
-import { pipeline, k, handle, getMeta, settingsOf, nameKey } from '../lib/redis.js';
+import { redis, pipeline, k, handle, getMeta, settingsOf, nameKey } from '../lib/redis.js';
 
 export default handle(async (req, res) => {
   const { id, admin, token } = req.query;
@@ -35,6 +35,9 @@ export default handle(async (req, res) => {
     let excluded = [];
     try { excluded = (JSON.parse(myEx || '[]')).map((x) => byKey[x]).filter(Boolean); } catch {}
     out.me = { name: m.name, draw: myDraw ? JSON.parse(myDraw) : null, excluded };
+    // Der Organisator macht selbst mit: seinen Teilnehmer-Eintrag merken, damit jedes Gerät ihn zur Verwaltung führt
+    if (!m.org && out.isAdmin) { m.org = 1; await redis('HSET', k(id, 'p'), t, JSON.stringify(m)); }
+    if (m.org) out.me.adminKey = meta.admin;
   }
   if (out.isAdmin && meta.status === 'open') {
     // Nur wer noch nicht gezogen hat (nie, was gezogen wurde) – für die Erinnerung
