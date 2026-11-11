@@ -23,9 +23,13 @@ export default handle(async (req, res) => {
     try { excl[exFlat[i]] = new Set(JSON.parse(exFlat[i + 1])); } catch {}
   }
   const keys = people.map((p) => nameKey(p.name));
-  const allowed = people.map((p, i) => keys.map((_, j) => j).filter((j) => j !== i && !(excl[p.token] && excl[p.token].has(keys[j]))));
+  let ax = {};
+  try { ax = JSON.parse(meta.ax || '{}'); } catch {}
+  const allowed = people.map((p, i) => keys.map((_, j) => j).filter((j) => j !== i
+    && !(excl[p.token] && excl[p.token].has(keys[j]))
+    && !(Array.isArray(ax[keys[i]]) && ax[keys[i]].includes(keys[j]))));
   const target = assignTargets(allowed);
-  if (!target) fail(409, 'Mit den gewählten Ausschlüssen geht die Losung nicht auf. Bitte ein paar Teilnehmer, einzelne Ausschlüsse wieder herauszunehmen.');
+  if (!target) fail(409, 'Mit den gewählten Ausschlüssen geht die Losung nicht auf. Bitte nimm ein paar Ausschlüsse wieder heraus – deine eigenen oder die der Teilnehmer.');
 
   // Farben und Buchstaben werden unabhängig voneinander (und unabhängig von der Person) gemischt
   const c = s.useColor ? derange(n) : null;
