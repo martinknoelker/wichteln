@@ -92,6 +92,9 @@
   button.chip{cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .12s}
   button.chip:active{transform:scale(.95)}
   button.chip:hover{border-color:var(--gold)}
+  .axwrap>summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
+  .axwrap>summary::-webkit-details-marker{display:none}
+  .axhint{font-size:13px;color:var(--muted)}
   .axp{border:1px solid var(--line);border-radius:14px;padding:4px 14px;margin:8px 0;background:rgba(255,255,255,.03)}
   .axp summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px 0;list-style:none;font-weight:600}
   .axp summary::-webkit-details-marker{display:none}
@@ -488,7 +491,7 @@
 
   /* ---------- Verwaltung (Ersteller) ---------- */
   let lastAdmin = '';
-  const axOpen = new Set();
+  const axOpen = new Set(); let axWrapOpen = false;
   async function adminView() {
     LS.set(admKey(PID), ADMIN);
     let s;
@@ -504,6 +507,7 @@
       const pLink = linkFor(PID);
       const joined = !!LS.get(tokKey(PID));
       const set = s.settings;
+      const sortedNames = [...s.names].sort((a, b) => a.localeCompare(b, 'de'));
       let action, settingsCard = '';
       if (s.status === 'open') {
         action = `<div class="center"><p class="eyebrow">Losung läuft</p><h2>${s.drawnCount} von ${s.total} haben gezogen</h2>
@@ -525,14 +529,15 @@
           <p class="err" id="seterr"></p>
         </section>
         <section class="card">
-          <h2>🚫 Wer darf wen nicht ziehen?</h2>
-          <p class="hint" style="margin:0 0 12px">Nur für dich sichtbar – die Teilnehmer erfahren nichts davon. Die Animation mischt weiterhin alle Namen, aber gezogen wird nie jemand, den du hier abgewählt hast.</p>
-          ${s.names.length < 3 ? `<p class="hint">Sobald sich mehr Leute eingetragen haben, kannst du das hier einstellen.</p>` : [...s.names].sort((a, b) => a.localeCompare(b, 'de')).map(g => {
+          <details class="axwrap" ${axWrapOpen ? 'open' : ''}><summary><h2 style="margin:0">🚫 Wer darf wen nicht ziehen?</h2><span class="axhint">optional</span></summary>
+          <p class="hint" style="margin:12px 0 12px">Nur für dich sichtbar – die Teilnehmer erfahren nichts davon. Die Animation mischt weiterhin alle Namen, aber gezogen wird nie jemand, den du hier abgewählt hast.</p>
+          ${s.names.length < 3 ? `<p class="hint">Sobald sich mehr Leute eingetragen haben, kannst du das hier einstellen.</p>` : sortedNames.map(g => {
             const sel = (s.adminEx || {})[g] || [];
-            return `<details class="axp" data-g="${esc(g)}" open><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
-              <small style="color:var(--muted)">${esc(g)} darf nicht ziehen:</small><div class="chips" style="justify-content:flex-start">${s.names.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
+            return `<details class="axp" data-g="${esc(g)}" ${axOpen.has(g) ? 'open' : ''}><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
+              <small style="color:var(--muted)">${esc(g)} darf nicht ziehen:</small><div class="chips" style="justify-content:flex-start">${sortedNames.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
           }).join('')}
           <p class="err" id="axerr"></p>
+          </details>
         </section>`;
       }
       app.innerHTML = `${brand}
@@ -576,6 +581,8 @@
         try { await post('settings', { id: PID, admin: ADMIN, budget: bud.value }); toast(bud.value ? `Budget: ${bud.value} € 💶` : 'Kein Budget'); document.getElementById('seterr').textContent = ''; }
         catch (e) { document.getElementById('seterr').textContent = e.message; }
       };
+      const aw = app.querySelector('details.axwrap');
+      if (aw) aw.addEventListener('toggle', () => { axWrapOpen = aw.open; });
       app.querySelectorAll('details.axp').forEach(d => {
         d.addEventListener('toggle', () => { d.open ? axOpen.add(d.dataset.g) : axOpen.delete(d.dataset.g); });
         d.querySelectorAll('[data-ax]').forEach(c => c.onclick = async () => {
@@ -857,7 +864,7 @@
       if (jt) jt.textContent = example(ltr, set.useColor ? col : '', 'j' + Math.random());
     };
     step();
-    jokerTimer = setInterval(step, 1800);
+    jokerTimer = setInterval(step, 8000);
   }
   function resultView(s, me, foot, fresh) {
     clearInterval(jokerTimer);
