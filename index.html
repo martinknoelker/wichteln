@@ -92,6 +92,13 @@
   button.chip{cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .12s}
   button.chip:active{transform:scale(.95)}
   button.chip:hover{border-color:var(--gold)}
+  .axp{border:1px solid var(--line);border-radius:14px;padding:4px 14px;margin:8px 0;background:rgba(255,255,255,.03)}
+  .axp summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px 0;list-style:none;font-weight:600}
+  .axp summary::-webkit-details-marker{display:none}
+  .axp summary em{font-style:normal;font-weight:400;font-size:13px;color:var(--muted)}
+  .axp .chips{padding-bottom:10px}
+  .budget{display:flex;gap:12px;align-items:center;justify-content:center;margin:16px auto 6px;padding:12px 16px;border-radius:16px;background:rgba(232,194,122,.1);border:1px solid rgba(232,194,122,.35);max-width:340px;text-align:left}
+  .budget span{font-size:26px}.budget b{display:block;color:var(--gold)}.budget small{color:var(--muted)}
   .chip.on{background:rgba(214,71,58,.2);border-color:rgba(214,71,58,.65);color:#ffb7ad;text-decoration:line-through;text-decoration-thickness:1.5px}
   .chip.sel{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#2a1d07;font-weight:600}
   @keyframes pop{from{transform:scale(.6);opacity:0}}
@@ -246,7 +253,7 @@
   const admKey = id => 'wichtel:admin:' + id;
 
   // Persönlicher Link (?t=…) stellt die Teilnahme in diesem Browser wieder her
-  if (PID && qs.get('t')) { try { localStorage.setItem('wichtel:tok:' + PID, qs.get('t')); } catch {} history.replaceState(null, '', '/?p=' + PID); }
+  if (PID && qs.get('t')) { try { localStorage.setItem('wichtel:tok:' + PID, qs.get('t')); } catch {} history.replaceState(null, '', '/?p=' + PID + (qs.get('me') ? '&me=1' : '')); }
 
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -450,6 +457,8 @@
           <label>Anzahl Teilnehmer (inklusive dir)
             <div class="stepper"><button type="button" data-d="-1" aria-label="weniger">−</button><input name="total" type="number" min="2" max="50" value="6" inputmode="numeric"><button type="button" data-d="1" aria-label="mehr">+</button></div>
           </label>
+          <label>Budget pro Geschenk in € <small style="color:var(--muted)">(optional)</small>
+            <input name="budget" type="number" min="1" max="10000" inputmode="numeric" placeholder="z. B. 15"></label>
           <p class="eyebrow" style="margin-top:22px">Einstellungen</p>
           <div class="always"><span class="oi">🎁</span><span><b>Wer beschenkt wen</b>Immer dabei: Jede Person zieht eine andere Person (nie sich selbst).</span></div>
           ${switchesHtml(DEFAULTS)}
@@ -470,7 +479,7 @@
       btn.disabled = true; err.textContent = '';
       const opt = k => f.querySelector(`[data-opt=${k}]`).checked;
       try {
-        const d = await post('create', { name: f.name.value, total: totalInput.value, useColor: opt('useColor'), useLetter: opt('useLetter'), joker: opt('joker'), loser: opt('loser') });
+        const d = await post('create', { name: f.name.value, total: totalInput.value, useColor: opt('useColor'), useLetter: opt('useLetter'), joker: opt('joker'), loser: opt('loser'), budget: f.budget.value });
         LS.set(admKey(d.id), d.admin);
         location.href = `/?p=${d.id}&admin=${d.admin}`;
       } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
@@ -479,6 +488,7 @@
 
   /* ---------- Verwaltung (Ersteller) ---------- */
   let lastAdmin = '';
+  const axOpen = new Set();
   async function adminView() {
     LS.set(admKey(PID), ADMIN);
     let s;
@@ -509,7 +519,20 @@
           <p class="hint" style="margin:0 0 14px">Änderungen wirken sofort und gelten für alle. ${locked.length ? 'Farbe und Buchstabe sind gesperrt, weil schon jemand eingereicht hat.' : ''}</p>
           <div class="always"><span class="oi">🎁</span><span><b>Wer beschenkt wen</b>Immer dabei. Alle können vor der Losung geheim Personen abwählen.</span></div>
           ${switchesHtml(set, locked)}
+          <label style="margin-top:16px">💶 Budget pro Geschenk in € <small style="color:var(--muted)">(leer = keins)</small>
+            <input id="budget" type="number" min="1" max="10000" inputmode="numeric" placeholder="z. B. 15" value="${set.budget || ''}"></label>
+          <p class="hint" style="margin-top:6px">Wird jedem nach der Ziehung als Orientierung angezeigt.</p>
           <p class="err" id="seterr"></p>
+        </section>
+        <section class="card">
+          <h2>🚫 Wer darf wen nicht ziehen?</h2>
+          <p class="hint" style="margin:0 0 12px">Nur für dich sichtbar – die Teilnehmer erfahren nichts davon. Die Animation mischt weiterhin alle Namen, aber gezogen wird nie jemand, den du hier abgewählt hast.</p>
+          ${s.names.length < 3 ? `<p class="hint">Sobald sich mehr Leute eingetragen haben, kannst du das hier einstellen.</p>` : [...s.names].sort((a, b) => a.localeCompare(b, 'de')).map(g => {
+            const sel = (s.adminEx || {})[g] || [];
+            return `<details class="axp" data-g="${esc(g)}" ${axOpen.has(g) ? 'open' : ''}><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
+              <div class="chips" style="justify-content:flex-start">${s.names.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
+          }).join('')}
+          <p class="err" id="axerr"></p>
         </section>`;
       }
       app.innerHTML = `${brand}
@@ -527,7 +550,7 @@
           <div class="linkbox"><code>${esc(pLink)}</code><button class="btn small" id="cp">Kopieren</button></div>
           <div class="stack">
             ${navigator.share ? `<button class="btn" id="share">Link teilen …</button>` : ''}
-            <a class="btn primary" href="${esc(pLink)}">${joined ? 'Zu meiner Teilnahme' : 'Selbst mitmachen →'}</a>
+            <a class="btn primary" href="${esc(pLink)}&me=1">${joined ? 'Zu meiner Teilnahme' : 'Selbst mitmachen →'}</a>
           </div>
           <p class="hint box">💡 Du machst selbst mit? Öffne den Teilnehmer-Link und trage dich genauso ein wie alle anderen. Was gezogen wird, siehst du hier nicht.</p>
         </section>
@@ -544,8 +567,25 @@
       app.querySelectorAll('[data-opt]').forEach(inp => inp.onchange = async () => {
         const body = { id: PID, admin: ADMIN };
         app.querySelectorAll('[data-opt]').forEach(i => { body[i.dataset.opt] = i.checked; });
+        const bi = document.getElementById('budget'); if (bi) body.budget = bi.value;
         try { await post('settings', body); lastAdmin = ''; stopPoll(); adminView(); }
         catch (e) { document.getElementById('seterr').textContent = e.message; lastAdmin = ''; schedule(adminView, 1500); }
+      });
+      const bud = document.getElementById('budget');
+      if (bud) bud.onchange = async () => {
+        try { await post('settings', { id: PID, admin: ADMIN, budget: bud.value }); toast(bud.value ? `Budget: ${bud.value} € 💶` : 'Kein Budget'); document.getElementById('seterr').textContent = ''; }
+        catch (e) { document.getElementById('seterr').textContent = e.message; }
+      };
+      app.querySelectorAll('details.axp').forEach(d => {
+        d.addEventListener('toggle', () => { d.open ? axOpen.add(d.dataset.g) : axOpen.delete(d.dataset.g); });
+        d.querySelectorAll('[data-ax]').forEach(c => c.onclick = async () => {
+          c.classList.toggle('on');
+          const ex = {};
+          app.querySelectorAll('details.axp').forEach(x => { const l = [...x.querySelectorAll('[data-ax].on')].map(y => y.dataset.ax); if (l.length) ex[x.dataset.g] = l; });
+          d.querySelector('summary em').textContent = d.querySelectorAll('[data-ax].on').length ? d.querySelectorAll('[data-ax].on').length + ' ausgeschlossen' : 'keine';
+          try { await post('settings', { id: PID, admin: ADMIN, ex }); document.getElementById('axerr').textContent = ''; }
+          catch (e) { document.getElementById('axerr').textContent = e.message; c.classList.toggle('on'); }
+        });
       });
       app.querySelectorAll('[data-rem]').forEach(b => b.onclick = async () => {
         const n = b.dataset.rem; b.disabled = true;
@@ -689,9 +729,11 @@
       const btn = f.querySelector('button[type=submit]'); const err = f.querySelector('.err');
       btn.disabled = true; err.textContent = '';
       try {
+        if (f.color && /^(bunt\w*|mehrfarbig\w*|multi\s?colou?r\w*|regenbogen\w*|rainbow)$/i.test(f.color.value.trim())) { err.textContent = 'Bunt gilt nicht – bitte wähle eine einzelne Farbe.'; btn.disabled = false; return; }
         const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
         lastPart = ''; exSet = null; pushSynced = false; setManifest();
+        if (LS.get(admKey(PID))) { location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
         participantView();
       } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
     };
@@ -736,6 +778,7 @@
         const d = await post('claim', { id: PID, name: who, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
         claimMode = false; lastPart = ''; exSet = null; pushSynced = false; setManifest();
+        if (LS.get(admKey(PID))) { location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
         participantView();
       } catch (ex) { err.textContent = ex.message; upd(); }
     };
@@ -836,6 +879,7 @@
       </div>` : ''}
       ${exText ? `<div class="example"><p class="t">💡 Geschenktipp</p><p class="ex" style="margin:0">${esc(exText)}</p></div>` : ''}
       ${loser ? `<div class="banner angel"><span class="ic">😇</span><div><b>Du bist der Engel!</b><p>Herzlichen Glückwunsch – ausgerechnet dich hat der Himmel erwählt. Zusätzlich zu deinem Geschenk bringst du für alle anderen (${others} ${others === 1 ? 'Person' : 'Personen'}) je eine Kleinigkeit mit, höchstens 1–2 € pro Person. Gute Taten sind eben dein Ding … und den Heiligenschein behältst du dabei natürlich auf. ✨</p></div></div>` : ''}
+      ${set.budget ? `<div class="budget"><span>💶</span><div><b>Budget: bis ${set.budget} €</b><small>pro Geschenk – zur Orientierung</small></div></div>` : ''}
       <p class="hint">Psst – nicht verraten! Auf einem anderen Gerät: Link öffnen → „Ich bin schon dabei“ → Name und PIN, dann siehst du dein Los wieder.</p>
     </section>${foot}`;
     if (joker) jokerHelp(set);
@@ -1003,6 +1047,7 @@
   if (!PID) document.getElementById('newparty').style.display = 'none';
   if (!PID) homeView();
   else if (ADMIN) adminView();
+  else if (LS.get(admKey(PID)) && !qs.get('me')) location.replace(adminLinkFor(PID, LS.get(admKey(PID))));
   else participantView();
   pushPrompt();
 })();
