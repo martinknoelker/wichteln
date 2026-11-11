@@ -36,5 +36,14 @@ export default handle(async (req, res) => {
     try { excluded = (JSON.parse(myEx || '[]')).map((x) => byKey[x]).filter(Boolean); } catch {}
     out.me = { name: m.name, draw: myDraw ? JSON.parse(myDraw) : null, excluded };
   }
+  if (out.isAdmin && meta.status === 'open') {
+    // Nur wer noch nicht gezogen hat (nie, was gezogen wurde) – für die Erinnerung
+    const [pf, dk] = await pipeline([['HGETALL', k(id, 'p')], ['HKEYS', k(id, 'd')]]);
+    const done = new Set(dk || []);
+    out.pending = [];
+    for (let i = 0; i < (pf || []).length; i += 2) {
+      if (!done.has(pf[i])) { try { out.pending.push(JSON.parse(pf[i + 1]).name); } catch {} }
+    }
+  }
   res.status(200).json(out);
 });
