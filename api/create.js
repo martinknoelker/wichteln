@@ -1,4 +1,4 @@
-import { pipeline, k, rid, TTL, handle, fail, body, clean } from '../lib/redis.js';
+import { pipeline, k, rid, TTL, handle, fail, body, clean, flag, asBool } from '../lib/redis.js';
 
 export default handle(async (req, res) => {
   if (req.method !== 'POST') fail(405, 'Nur POST erlaubt');
@@ -11,7 +11,12 @@ export default handle(async (req, res) => {
   const id = rid(8);
   const admin = rid(20);
   await pipeline([
-    ['HSET', k(id, 'meta'), 'name', name, 'total', total, 'status', 'collecting', 'admin', admin, 'created', Date.now()],
+    ['HSET', k(id, 'meta'),
+      'name', name, 'total', total, 'status', 'collecting', 'admin', admin, 'created', Date.now(),
+      'useColor', flag(asBool(b.useColor, true)),
+      'useLetter', flag(asBool(b.useLetter, true)),
+      'joker', flag(asBool(b.joker, false)),
+      'loser', flag(asBool(b.loser, false))],
     ['EXPIRE', k(id, 'meta'), TTL],
   ]);
   res.status(200).json({ id, admin });
