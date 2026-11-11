@@ -126,6 +126,7 @@
   const qs = new URLSearchParams(location.search);
   const PID = qs.get('p');
   const ADMIN = qs.get('admin');
+  if (PID && qs.get('t')) { try { localStorage.setItem('wichtel:tok:' + PID, qs.get('t')); } catch {} history.replaceState(null, '', '/?p=' + PID); }
   const LS = {
     get(k){ try{ return localStorage.getItem(k); }catch{ return null; } },
     set(k,v){ try{ localStorage.setItem(k,v); }catch{} },
