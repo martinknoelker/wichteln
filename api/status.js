@@ -46,5 +46,19 @@ export default handle(async (req, res) => {
     }
     out.pending.sort((x, y) => x.localeCompare(y, 'de')); // feste Reihenfolge
   }
+  if (out.isAdmin && meta.status === 'collecting') {
+    // Nur für den Organisator: seine geheimen Ausschlüsse (Name → Namen)
+    const byKey = {};
+    names.forEach((n) => { byKey[nameKey(n)] = n; });
+    out.adminEx = {};
+    try {
+      const ax = JSON.parse(meta.ax || '{}');
+      for (const [g, list] of Object.entries(ax)) {
+        if (!byKey[g]) continue;
+        const l = list.map((x) => byKey[x]).filter(Boolean);
+        if (l.length) out.adminEx[byKey[g]] = l;
+      }
+    } catch {}
+  }
   res.status(200).json(out);
 });
