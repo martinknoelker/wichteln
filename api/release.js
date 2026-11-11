@@ -1,5 +1,6 @@
 import { redis, pipeline, k, TTL, handle, fail, body, getMeta, settingsOf, nameKey } from '../lib/redis.js';
 import { derange, assignTargets, pick } from '../lib/assign.js';
+import { notify } from '../lib/push.js';
 
 export default handle(async (req, res) => {
   if (req.method !== 'POST') fail(405, 'Nur POST erlaubt');
@@ -57,5 +58,14 @@ export default handle(async (req, res) => {
     ['EXPIRE', k(id, 'a'), TTL],
     ['HSET', k(id, 'meta'), 'status', 'open'],
   ]);
+  // Alle, die Benachrichtigungen erlaubt haben, erfahren, dass die Losung offen ist (Fehler stören die Freigabe nicht)
+  try {
+    await notify(id, {
+      title: '🎁 Die Losung ist offen!',
+      body: `Bei „${meta.name}“ kannst du jetzt ziehen – wen beschenkst du?`,
+      url: `/?p=${id}`,
+      tag: 'wichtel-open-' + id,
+    });
+  } catch {}
   res.status(200).json({ ok: true });
 });
