@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wichteln ✦ Weihnachtslosung</title>
-<meta name="description" content="Weihnachts-Wichteln: Feier erstellen, Link teilen, losen – wer wen beschenkt, mit Farbe, Buchstabe, Joker und Loser.">
+<meta name="description" content="Weihnachts-Wichteln: Feier erstellen, Link teilen, losen – wer wen beschenkt, mit Farbe, Buchstabe, Joker und Engel.">
 <meta name="theme-color" content="#0b1f19">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
   }
   body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(120% 80% at 50% -10%,var(--bg1) 0%,var(--bg2) 70%)}
   #snow{position:fixed;inset:0;pointer-events:none;z-index:0}
-  main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:28px 18px 60px;min-height:100vh;display:flex;flex-direction:column}
+  main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:28px 18px 24px;min-height:calc(100vh - 58px);display:flex;flex-direction:column}
   .brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-size:20px;letter-spacing:.02em;margin-bottom:28px;color:var(--ink);text-decoration:none}
   .brand .star{color:var(--gold);font-size:22px;animation:twinkle 3s ease-in-out infinite}
   @keyframes twinkle{50%{opacity:.45;transform:scale(.85) rotate(20deg)}}
@@ -150,6 +150,39 @@
   .example{margin:14px 0 0;padding:16px 18px;border-radius:18px;background:rgba(0,0,0,.22);border:1px dashed rgba(232,194,122,.45);text-align:left}
   .example .t{margin:0 0 6px;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
   .example .ex{margin:0 0 12px;font-family:Fraunces,serif;font-size:19px;line-height:1.35}
+  .banner.angel{background:linear-gradient(135deg,rgba(255,236,170,.26),rgba(140,190,240,.12));border:1px solid rgba(255,236,170,.55)}
+  .xmas{position:relative;z-index:1;text-align:center;padding:6px 18px 24px;font-family:Fraunces,serif;font-style:italic;font-size:14px;letter-spacing:.02em;color:var(--faint)}
+  .xmas span{font-style:normal;color:var(--gold);opacity:.75;font-size:11px;margin:0 8px}
+  .sheet{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(520px,calc(100vw - 24px));z-index:40;display:flex;gap:6px 14px;align-items:center;flex-wrap:wrap;padding:16px 18px;border-radius:20px;background:rgba(14,40,31,.97);border:1px solid rgba(232,194,122,.5);box-shadow:0 20px 60px rgba(0,0,0,.55);animation:sheetin .5s cubic-bezier(.2,1.2,.4,1) both}
+  .sheet .ic{font-size:30px}
+  .sheet .tx{flex:1;min-width:200px}
+  .sheet b{display:block;font-family:Fraunces,serif;font-size:18px;margin-bottom:2px}
+  .sheet p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+  .sheet .acts{display:flex;gap:8px;width:100%;justify-content:flex-end;margin-top:6px}
+  @keyframes sheetin{from{opacity:0;transform:translateX(-50%) translateY(30px)}}
+  .rrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);text-align:left}
+  .rrow:first-of-type{border-top:0}
+  #fx{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;opacity:0;animation:fxin .5s ease forwards;cursor:pointer;text-align:center;padding:24px}
+  #fx.out{animation:fxout .6s ease forwards}
+  @keyframes fxin{to{opacity:1}}
+  @keyframes fxout{from{opacity:1}to{opacity:0}}
+  #fx.angel{background:radial-gradient(circle at 50% 40%,rgba(255,248,222,.98) 0%,rgba(255,228,150,.94) 30%,rgba(120,170,230,.95) 100%)}
+  #fx.joker{background:radial-gradient(circle at 50% 40%,rgba(130,44,170,.97) 0%,rgba(38,10,78,.98) 72%)}
+  #fx .rays{position:absolute;left:50%;top:40%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;animation:spin 16s linear infinite}
+  #fx.angel .rays{background:repeating-conic-gradient(rgba(255,255,255,.3) 0 9deg,transparent 9deg 18deg)}
+  #fx.joker .rays{background:repeating-conic-gradient(rgba(255,216,107,.2) 0 9deg,transparent 9deg 18deg)}
+  #fx .p{position:absolute;top:-14vh;left:var(--x);font-size:var(--s);font-style:normal;animation:fall var(--d) var(--l) linear both;will-change:transform}
+  @keyframes fall{to{transform:translate3d(var(--dx),122vh,0) rotate(var(--r))}}
+  #fx .big{position:relative;font-size:clamp(110px,34vw,190px);line-height:1;animation:drop 1s cubic-bezier(.2,1.3,.4,1) both,bob 2.4s 1s ease-in-out infinite;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35))}
+  #fx .big.flip{animation:drop 1s cubic-bezier(.2,1.3,.4,1) both,flipy 1.6s 1s ease-in-out infinite}
+  @keyframes drop{from{transform:translateY(-120vh) rotate(-30deg) scale(.5)}60%{transform:translateY(0) rotate(8deg) scale(1.12)}}
+  @keyframes flipy{50%{transform:rotateY(180deg) scale(1.08)}}
+  #fx .ttl{position:relative;font-family:Fraunces,serif;font-weight:700;font-size:clamp(38px,11vw,72px);line-height:1.05;margin:8px 0 6px;animation:fxtxt .7s .5s ease both}
+  #fx .sb{position:relative;font-size:clamp(16px,4.4vw,22px);max-width:19em;font-weight:500;animation:fxtxt .7s .8s ease both}
+  #fx.angel .ttl,#fx.angel .sb{color:#4a3510}
+  #fx.joker .ttl{color:#ffd86b}
+  #fx.joker .sb{color:#fff}
+  @keyframes fxtxt{from{opacity:0;transform:translateY(24px) scale(.9)}}
   .loading{display:flex;justify-content:center;padding:60px 0}
   .spinner{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.12);border-top-color:var(--gold);animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -163,6 +196,7 @@
 <body>
 <canvas id="snow"></canvas>
 <main id="app"><div class="loading"><div class="spinner"></div></div></main>
+<footer class="xmas"><span>✦</span>Martin wünscht Dir frohe Weihnachten<span>✦</span></footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -249,7 +283,7 @@
     ['useColor',  '🎨', 'Farbe',            'Alle werfen eine Farbe in den Topf und ziehen später eine fremde.'],
     ['useLetter', '🔤', 'Anfangsbuchstabe', 'Dasselbe mit einem Buchstaben – dazu gibt es ein witziges „Bloß nicht verschenken“-Beispiel.'],
     ['joker',     '🃏', 'Joker',            'Eine zufällige Person darf sich ihr Geschenk ganz frei aussuchen – ohne Farbe und Buchstabe.'],
-    ['loser',     '😈', 'Loser',            'Eine zufällige Person bringt zusätzlich für alle ein kleines Geschenk mit (max. 1–2 € pro Person).'],
+    ['loser',     '😇', 'Engel',            'Eine zufällige Person ist der Engel und bringt zusätzlich für alle ein kleines Geschenk mit (max. 1–2 € pro Person).'],
   ];
   const DEFAULTS = { useColor: true, useLetter: true, joker: false, loser: false };
   function switchesHtml(v, locked = []) {
@@ -265,7 +299,7 @@
     if (set.useColor) h += li('🎨', '<b>Eine Farbe</b> – dein Geschenk soll diese Farbe haben.');
     if (set.useLetter) h += li('🔤', '<b>Ein Buchstabe</b> – dein Geschenk beginnt damit (inkl. witzigem Gegenbeispiel).');
     if (set.joker) h += li('🃏', '<b>Ein Joker</b> – eine Person darf völlig frei schenken. Wer, bleibt geheim.');
-    if (set.loser) h += li('😈', '<b>Ein Loser</b> – eine Person bringt für alle ein Mini-Geschenk (max. 1–2 €) mit. Wer, bleibt geheim.');
+    if (set.loser) h += li('😇', '<b>Ein Engel</b> – eine Person bringt für alle ein Mini-Geschenk (max. 1–2 €) mit. Wer, bleibt geheim.');
     return `<ul class="rules">${h}</ul>`;
   }
 
@@ -352,23 +386,20 @@
     return `${art} ${noun} in ${raw.charAt(0).toLocaleUpperCase('de-DE') + raw.slice(1)}`;
   }
   const hash = str => { let h = 5381; for (const ch of str) h = ((h << 5) + h + ch.codePointAt(0)) >>> 0; return h; };
-  function example(letter, color, seedName, bump = 0) {
+  const cap = t => t.charAt(0).toLocaleUpperCase('de-DE') + t.slice(1);
+  function example(letter, color, seedName) {
     const L = String(letter || '').toLocaleUpperCase('de-DE')[0] || '';
     const list = parseNouns(NOUNS[L] || NOUN_FALLBACK);
-    const h = hash(`${L}|${String(color || '').toLowerCase()}|${seedName}`) + bump;
+    const h = hash(`${L}|${String(color || '').toLowerCase()}|${seedName}`);
     const n = list[h % list.length];
-    const known = !!NOUNS[L];
     const nom = np('nom', n.g, n.w, color), acc = np('acc', n.g, n.w, color), dat = np('dat', n.g, n.w, color);
-    const T = known ? [
-      `${L} wie ${nom} – das schenkst du garantiert nie.`,
-      `Bloß nicht verschenken: ${acc}. (${L} wie ${n.w}!)`,
-      `Finger weg von ${dat}! Schlimmer geht’s kaum – ${L} wie ${n.w}.`,
-      `Du würdest ${acc} niemals verschenken, oder? ${L} wie ${n.w}.`,
-      `${L} wie ${nom}: das wäre das Geschenk, das keiner will.`,
-    ] : [
-      `Zum ${L}: Verschenk bloß nicht ${acc}.`,
-      `Finger weg von ${dat}! Das wäre ein echter Reinfall.`,
-      `Auf keinen Fall einpacken: ${acc}.`,
+    const T = [
+      `Wie wäre es mit ${dat}?`,
+      `Ich hätte da einen Tipp: ${acc}.`,
+      `${cap(nom)} kommt unterm Baum immer gut an.`,
+      `Schenk doch ${acc} – das vergisst so schnell keiner.`,
+      `Wie wäre es mit ${dat}? Ein echter Volltreffer.`,
+      `Mein Geheimtipp: ${acc}.`,
     ];
     return T[(h >>> 3) % T.length];
   }
@@ -381,7 +412,7 @@
       <section class="card fade">
         <p class="eyebrow">Weihnachts-Wichteln</p>
         <h1>Wer schenkt<br><em>wem?</em></h1>
-        <p class="lead">Leg eine Feier an und teil den Link. Alle tragen sich mit Namen und PIN ein – danach wird gelost, wen man beschenkt. Auf Wunsch mit Farbe, Buchstabe, Joker und Loser.</p>
+        <p class="lead">Leg eine Feier an und teil den Link. Alle tragen sich mit Namen und PIN ein – danach wird gelost, wen man beschenkt. Auf Wunsch mit Farbe, Buchstabe, Joker und Engel.</p>
         <form id="create" autocomplete="off">
           <label>Name der Feier<input name="name" maxlength="60" placeholder="z. B. Weihnachtsfeier WG" required></label>
           <label>Anzahl Teilnehmer (inklusive dir)
@@ -395,7 +426,7 @@
         </form>
       </section>
       <ol class="steps"><li><b>1</b>Feier anlegen</li><li><b>2</b>Link teilen</li><li><b>3</b>Losung starten</li></ol>
-      <p class="foot">Frohe Weihnachten ✦</p>`;
+`;
     const f = document.getElementById('create');
     const totalInput = f.total;
     f.querySelectorAll('[data-d]').forEach(b => b.onclick = () => {
@@ -434,7 +465,8 @@
       let action, settingsCard = '';
       if (s.status === 'open') {
         action = `<div class="center"><p class="eyebrow">Losung läuft</p><h2>${s.drawnCount} von ${s.total} haben gezogen</h2>
-          <p class="hint">Du siehst hier bewusst nicht, wer wen oder was gezogen hat – so kannst du ganz normal mitmachen.</p></div>`;
+          <p class="hint">Du siehst hier bewusst nicht, wer wen oder was gezogen hat – so kannst du ganz normal mitmachen.</p>
+          ${(s.pending || []).length ? `<p class="eyebrow" style="margin:18px 0 4px">Noch nicht gezogen</p>${s.pending.map(n => `<div class="rrow"><span>${esc(n)}</span><button class="btn small" data-rem="${esc(n)}">🔔 Erinnern</button></div>`).join('')}` : `<p class="hint">Alle haben gezogen 🎉</p>`}</div>`;
       } else {
         action = `<button class="btn gold" id="release" ${full ? '' : 'disabled'}>✦ Losung freigeben</button>
           <p class="hint center">${full ? 'Alle sind dabei – du kannst die Losung starten.' : `Noch ${s.total - s.count} ${s.total - s.count === 1 ? 'Einreichung fehlt' : 'Einreichungen fehlen'}.`}</p>
@@ -483,6 +515,17 @@
         try { await post('settings', body); lastAdmin = ''; stopPoll(); adminView(); }
         catch (e) { document.getElementById('seterr').textContent = e.message; lastAdmin = ''; schedule(adminView, 1500); }
       });
+      app.querySelectorAll('[data-rem]').forEach(b => b.onclick = async () => {
+        const n = b.dataset.rem; b.disabled = true;
+        try {
+          const r = await post('push', { action: 'remind', id: PID, admin: ADMIN, name: n });
+          toast(r.result === 'sent' ? `${n} wurde erinnert 🔔`
+            : r.result === 'nosub' ? `${n} hat Benachrichtigungen nicht erlaubt – bitte direkt Bescheid sagen.`
+            : r.result === 'wait' ? `${n} wurde gerade erst erinnert – bitte kurz warten.`
+            : `${n} hat schon gezogen.`);
+        } catch (e) { toast(e.message); }
+        setTimeout(() => { b.disabled = false; }, 4000);
+      });
       const rel = document.getElementById('release');
       if (rel) rel.onclick = async () => {
         rel.disabled = true;
@@ -506,8 +549,9 @@
 
     if (token && !s.me) LS.del(tokKey(PID));
     const me = s.me;
+    if (me) pushSync();
     const adminLink = LS.get(admKey(PID));
-    const foot = `<p class="foot">${adminLink ? `<a href="/?p=${esc(PID)}&admin=${esc(adminLink)}">Zur Verwaltung</a>` : 'Frohe Weihnachten ✦'}</p>`;
+    const foot = `<p class="foot">${adminLink ? `<a href="/?p=${esc(PID)}&admin=${esc(adminLink)}">Zur Verwaltung</a>` : ''}</p>`;
     document.title = s.name + ' · Wichteln';
     s.settings = { ...DEFAULTS, target: false, ...s.settings };
 
@@ -615,7 +659,7 @@
       try {
         const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
-        lastPart = ''; exSet = null;
+        lastPart = ''; exSet = null; pushSynced = false;
         participantView();
       } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
     };
@@ -659,7 +703,7 @@
       try {
         const d = await post('claim', { id: PID, name: who, pin: f.pin.value });
         LS.set(tokKey(PID), d.token);
-        claimMode = false; lastPart = ''; exSet = null;
+        claimMode = false; lastPart = ''; exSet = null; pushSynced = false;
         participantView();
       } catch (ex) { err.textContent = ex.message; upd(); }
     };
@@ -723,7 +767,6 @@
     return { stop: () => clearInterval(t) };
   }
 
-  let bump = 0;
   function resultView(s, me, foot, fresh) {
     const d = me.draw;
     const { color, letter, target, joker, loser } = d;
@@ -731,7 +774,7 @@
     const known = colorCss(color);
     const others = Math.max(0, s.total - 1);
     const tiles = !joker && ((color ? 1 : 0) + (letter ? 1 : 0));
-    const exText = !joker && letter ? example(letter, color, me.name, bump) : '';
+    const exText = !joker && letter ? example(letter, color, me.name) : '';
     app.innerHTML = `${brand}<section class="card center ${fresh ? 'revealed' : 'fade'}">
       <p class="eyebrow">${esc(s.name)} · ${esc(me.name)}</p>
       <h2>Dein Los</h2>
@@ -741,13 +784,78 @@
         ${color ? `<div class="tile"><span class="lbl">Farbe</span><div class="swatch ${known ? '' : 'unknown'}" ${swatchStyle(color)}></div><div class="cname">${esc(color)}</div></div>` : ''}
         ${letter ? `<div class="tile"><span class="lbl">Buchstabe</span><div class="bigletter">${esc(letter)}</div></div>` : ''}
       </div>` : ''}
-      ${exText ? `<div class="example"><p class="t">🚫 Bloß nicht verschenken</p><p class="ex" id="ex">${esc(exText)}</p><button class="btn small" id="reroll">🎲 Noch eins</button></div>` : ''}
-      ${loser ? `<div class="banner loser"><span class="ic">😈</span><div><b>Du bist der Loser!</b><p>Zusätzlich zu deinem Geschenk bringst du für alle anderen (${others} ${others === 1 ? 'Person' : 'Personen'}) je ein kleines Geschenk mit – maximal 1–2 € pro Person.</p></div></div>` : ''}
+      ${exText ? `<div class="example"><p class="t">💡 Geschenktipp</p><p class="ex" style="margin:0">${esc(exText)}</p></div>` : ''}
+      ${loser ? `<div class="banner angel"><span class="ic">😇</span><div><b>Du bist der Engel!</b><p>Herzlichen Glückwunsch – ausgerechnet dich hat der Himmel erwählt. Zusätzlich zu deinem Geschenk bringst du für alle anderen (${others} ${others === 1 ? 'Person' : 'Personen'}) je eine Kleinigkeit mit, höchstens 1–2 € pro Person. Gute Taten sind eben dein Ding … und den Heiligenschein behältst du dabei natürlich auf. ✨</p></div></div>` : ''}
       <p class="hint">Psst – nicht verraten! Auf einem anderen Gerät: Link öffnen → „Ich bin schon dabei“ → Name und PIN, dann siehst du dein Los wieder.</p>
     </section>${foot}`;
-    const rr = document.getElementById('reroll');
-    if (rr) rr.onclick = () => { bump++; document.getElementById('ex').textContent = example(letter, color, me.name, bump); };
-    if (fresh) burst();
+    if (fresh) {
+      burst();
+      if (joker || loser) setTimeout(() => fx(loser ? 'angel' : 'joker'), 2600);
+    }
+  }
+
+  /* ---------- Vollbild-Animation (Joker / Engel) ---------- */
+  function fx(kind) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const old = document.getElementById('fx'); if (old) old.remove();
+    const A = kind === 'angel';
+    const em = A ? ['🪶', '✨', '☁️', '😇', '⭐', '🕊️', '🌟'] : ['🃏', '🎉', '✨', '🎊', '♠️', '♥️', '♦️', '♣️', '🎲', '🌈'];
+    let ps = '';
+    for (let i = 0; i < 48; i++) {
+      ps += `<i class="p" style="--x:${(Math.random() * 100).toFixed(1)}vw;--s:${(18 + Math.random() * 34).toFixed(0)}px;--d:${(2.6 + Math.random() * 2.2).toFixed(2)}s;--l:${(Math.random() * 1.6).toFixed(2)}s;--dx:${((Math.random() - .5) * 30).toFixed(1)}vw;--r:${((Math.random() - .5) * 720).toFixed(0)}deg">${em[i % em.length]}</i>`;
+    }
+    const el = document.createElement('div');
+    el.id = 'fx'; el.className = kind;
+    el.innerHTML = `<div class="rays"></div>${ps}<div class="big ${A ? '' : 'flip'}">${A ? '😇' : '🃏'}</div><div class="ttl">${A ? 'Du bist der Engel!' : 'JOKER!'}</div><div class="sb">${A ? 'Himmlisch – und zwar für alle anderen.' : 'Du darfst dir dein Geschenk frei aussuchen!'}</div>`;
+    document.body.appendChild(el);
+    let done = false;
+    const end = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => el.remove(), 650); };
+    el.onclick = end; setTimeout(end, 5000);
+  }
+
+  /* ---------- Benachrichtigungen ---------- */
+  const PUSH_OK = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  const b64uToU8 = t => { const b = atob((t + '='.repeat((4 - t.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(b, c => c.charCodeAt(0)); };
+  let pushSynced = false;
+  async function pushSync() {
+    if (pushSynced || !PUSH_OK || !PID || Notification.permission !== 'granted') return;
+    const token = LS.get(tokKey(PID)); if (!token) return;
+    pushSynced = true;
+    try {
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) { const { key } = await api('push'); sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToU8(key) }); }
+      const sig = token + '|' + sub.endpoint;
+      if (LS.get('wichtel:ps:' + PID) === sig) return;
+      await post('push', { action: 'subscribe', id: PID, token, sub: sub.toJSON() });
+      LS.set('wichtel:ps:' + PID, sig);
+    } catch { pushSynced = false; }
+  }
+  function sheet(html) {
+    const old = document.getElementById('pushsheet'); if (old) old.remove();
+    const el = document.createElement('div'); el.id = 'pushsheet'; el.className = 'sheet'; el.innerHTML = html;
+    document.body.appendChild(el); return el;
+  }
+  // Bei jedem Besuch: fragen, solange nicht erlaubt
+  function pushPrompt() {
+    if (!PUSH_OK) return;
+    if (Notification.permission === 'granted') { pushSync(); return; }
+    setTimeout(() => {
+      if (Notification.permission === 'denied') {
+        const el = sheet(`<span class="ic">🔕</span><div class="tx"><b>Benachrichtigungen sind blockiert</b><p>So verpasst du, wenn die Losung startet. Du kannst sie in den Browser-Einstellungen (Schloss-Symbol neben der Adresse) wieder erlauben.</p></div><div class="acts"><button class="btn small" id="pok">Verstanden</button></div>`);
+        el.querySelector('#pok').onclick = () => el.remove();
+        return;
+      }
+      const el = sheet(`<span class="ic">🔔</span><div class="tx"><b>Benachrichtigungen erlauben?</b><p>Wir sagen dir Bescheid, sobald die Losung startet – und erinnern dich, falls du noch nicht gezogen hast.</p></div><div class="acts"><button class="btn small" id="pno">Nein</button><button class="btn small primary" id="pyes">Ja, gern</button></div>`);
+      el.querySelector('#pno').onclick = () => el.remove();
+      el.querySelector('#pyes').onclick = async () => {
+        el.remove();
+        let r = 'default';
+        try { r = await Notification.requestPermission(); } catch {}
+        if (r === 'granted') { toast('Benachrichtigungen sind an 🔔'); pushSync(); }
+      };
+    }, 1200);
   }
 
   /* ---------- Schnee ---------- */
@@ -791,6 +899,7 @@
   if (!PID) homeView();
   else if (ADMIN) adminView();
   else participantView();
+  pushPrompt();
 })();
 </script>
 </body>
