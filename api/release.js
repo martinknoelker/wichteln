@@ -62,7 +62,7 @@ export default handle(async (req, res) => {
   try {
     await notify(id, {
       title: '🎁 Die Losung ist offen!',
-      body: `Bei „${meta.name}“ kannst du jetzt ziehen – wen beschenkst du?`,
+      body: `Bei „${meta.name}“ kannst du jetzt ziehen – wen beschenkst du wohl? ✨`,
       url: `/?p=${id}`,
       tag: 'wichtel-open-' + id,
     });
