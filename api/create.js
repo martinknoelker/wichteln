@@ -1,4 +1,4 @@
-import { pipeline, k, rid, TTL, handle, fail, body, clean, flag, asBool } from '../lib/redis.js';
+import { pipeline, k, rid, TTL, handle, fail, body, clean, flag, asBool, budgetOf } from '../lib/redis.js';
 
 export default handle(async (req, res) => {
   if (req.method !== 'POST') fail(405, 'Nur POST erlaubt');
@@ -16,7 +16,8 @@ export default handle(async (req, res) => {
       'useColor', flag(asBool(b.useColor, true)),
       'useLetter', flag(asBool(b.useLetter, true)),
       'joker', flag(asBool(b.joker, false)),
-      'loser', flag(asBool(b.loser, false))],
+      'loser', flag(asBool(b.loser, false)),
+      'budget', budgetOf(b.budget)],
     ['EXPIRE', k(id, 'meta'), TTL],
   ]);
   res.status(200).json({ id, admin });
