@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wichteln ✦ Weihnachtslosung</title>
+<meta name="description" content="Weihnachts-Wichteln: Feier erstellen, Link teilen, losen – wer wen beschenkt, mit Farbe, Buchstabe, Joker und Engel.">
+<meta name="theme-color" content="#0b1f19">
+<link rel="manifest" href="/api/manifest" id="mf">
+<link rel="apple-touch-icon" href="/api/icon?s=192">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wichteln">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#12352b; --bg2:#081410;
+    --ink:#f6efe2; --muted:#b9c3bc; --faint:rgba(246,239,226,.55);
+    --gold:#e8c27a; --gold2:#c99a4a; --red:#d6473a; --red2:#a92e25;
+    --glass:rgba(255,255,255,.055); --line:rgba(255,255,255,.12);
+    --radius:22px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:Inter,system-ui,sans-serif;color:var(--ink);
+    background:var(--bg2);
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(120% 80% at 50% -10%,var(--bg1) 0%,var(--bg2) 70%)}
+  #snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+  main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:28px 18px 24px;min-height:calc(100vh - 58px);display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-size:20px;letter-spacing:.02em;margin-bottom:28px;color:var(--ink);text-decoration:none}
+  .brand .star{color:var(--gold);font-size:22px;animation:twinkle 3s ease-in-out infinite}
+  @keyframes twinkle{50%{opacity:.45;transform:scale(.85) rotate(20deg)}}
+  .card{background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 30px 80px -30px rgba(0,0,0,.6)}
+  .card + .card{margin-top:16px}
+  .eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:11.5px;color:var(--gold);margin:0 0 10px;font-weight:600}
+  h1{font-family:Fraunces,serif;font-weight:600;font-size:clamp(34px,8vw,46px);line-height:1.04;margin:0 0 14px;letter-spacing:-.01em}
+  h1 em{font-style:italic;font-weight:400;color:var(--gold)}
+  h2{font-family:Fraunces,serif;font-weight:600;font-size:24px;margin:0 0 8px}
+  .lead{color:var(--muted);line-height:1.55;margin:0 0 24px;font-size:15.5px}
+  label{display:block;font-size:13px;color:var(--muted);margin:0 0 16px;font-weight:500}
+  input{
+    display:block;width:100%;margin-top:7px;padding:14px 16px;font:inherit;font-size:16px;color:var(--ink);
+    background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:14px;outline:none;transition:border-color .2s,box-shadow .2s
+  }
+  input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(232,194,122,.15)}
+  input::placeholder{color:rgba(246,239,226,.3)}
+  .stepper{display:flex;gap:8px;margin-top:7px}
+  .stepper input{margin:0;text-align:center;font-family:Fraunces,serif;font-size:22px;font-weight:600;-moz-appearance:textfield}
+  .stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none}
+  .stepper button{flex:0 0 54px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--ink);font-size:22px;cursor:pointer}
+  .stepper button:hover{border-color:var(--gold)}
+  .row{display:flex;gap:12px}
+  .row > *{flex:1}
+  .letter-input input{text-align:center;font-family:Fraunces,serif;font-size:26px;font-weight:600;text-transform:uppercase;padding:10px}
+  .pin input{text-align:center;font-family:Fraunces,serif;font-size:26px;font-weight:600;letter-spacing:.5em;padding:10px 10px 10px calc(10px + .5em)}
+  .color-field{position:relative}
+  .color-field .dot{position:absolute;right:12px;bottom:12px;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:transparent;transition:background .25s}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px 20px;border-radius:999px;border:0;cursor:pointer;
+    font:600 16px Inter,sans-serif;color:var(--ink);background:rgba(255,255,255,.08);border:1px solid var(--line);text-decoration:none;transition:transform .15s,filter .2s,opacity .2s
+  }
+  .btn:hover{filter:brightness(1.12)}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:linear-gradient(135deg,var(--red),var(--red2));border-color:transparent;box-shadow:0 12px 30px -10px rgba(214,71,58,.7)}
+  .btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1d07;border-color:transparent;box-shadow:0 12px 30px -10px rgba(232,194,122,.6)}
+  .btn[disabled]{opacity:.4;cursor:not-allowed;filter:none;box-shadow:none}
+  .btn.small{width:auto;padding:10px 16px;font-size:14px}
+  .linkbtn{display:block;margin:14px auto 0;padding:6px;background:none;border:0;color:var(--gold);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .err{color:#ff9d8f;font-size:14px;min-height:1em;margin:12px 0 0;text-align:center}
+  .steps{list-style:none;padding:0;margin:22px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .steps li{font-size:12.5px;color:var(--muted);text-align:center;line-height:1.4}
+  .steps b{display:block;font-family:Fraunces,serif;color:var(--gold);font-size:22px;font-weight:400}
+  .center{text-align:center}
+  .ring{position:relative;width:170px;height:170px;margin:8px auto 6px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:9}
+  .ring .track{stroke:rgba(255,255,255,.08)}
+  .ring .bar{stroke:url(#g);stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)}
+  .ring .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Fraunces,serif;font-size:52px;font-weight:600}
+  .ring .num span{font-size:24px;color:var(--faint);font-weight:400;margin-left:2px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 4px}
+  .chip{padding:8px 14px;border-radius:999px;background:rgba(232,194,122,.12);border:1px solid rgba(232,194,122,.35);font-size:14px;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both;color:var(--ink);font-family:inherit}
+  .chip.empty{background:transparent;border:1px dashed var(--line);color:rgba(246,239,226,.3)}
+  button.chip{cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .12s}
+  button.chip:active{transform:scale(.95)}
+  button.chip:hover{border-color:var(--gold)}
+  .axwrap>summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
+  .axwrap>summary::-webkit-details-marker{display:none}
+  .axhint{font-size:13px;color:var(--muted)}
+  .axp{border:1px solid var(--line);border-radius:14px;padding:4px 14px;margin:8px 0;background:rgba(255,255,255,.03)}
+  .axp summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px 0;list-style:none;font-weight:600}
+  .axp summary::-webkit-details-marker{display:none}
+  .axp summary em{font-style:normal;font-weight:400;font-size:13px;color:var(--muted)}
+  .axp .chips{padding-bottom:10px}
+  .alldone{display:flex;gap:12px;align-items:center;justify-content:center;margin:16px auto 6px;padding:12px 16px;border-radius:16px;background:rgba(120,200,150,.12);border:1px solid rgba(120,200,150,.4);max-width:340px;text-align:left}
+  .alldone small{display:block;color:var(--muted);margin-top:2px}
+  .alldone .ic{font-size:26px}
+  .budget{display:flex;gap:12px;align-items:center;justify-content:center;margin:16px auto 6px;padding:12px 16px;border-radius:16px;background:rgba(232,194,122,.1);border:1px solid rgba(232,194,122,.35);max-width:340px;text-align:left}
+  .budget span{font-size:26px}.budget b{display:block;color:var(--gold)}.budget small{color:var(--muted)}
+  .chip.on{background:rgba(214,71,58,.2);border-color:rgba(214,71,58,.65);color:#ffb7ad;text-decoration:line-through;text-decoration-thickness:1.5px}
+  .chip.sel{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#2a1d07;font-weight:600}
+  @keyframes pop{from{transform:scale(.6);opacity:0}}
+  .linkbox{display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:14px;padding:6px 6px 6px 14px;margin:8px 0 10px}
+  .linkbox code{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:var(--muted)}
+  .hint{font-size:13.5px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+  .hint.box{background:rgba(232,194,122,.08);border:1px solid rgba(232,194,122,.25);border-radius:14px;padding:12px 14px}
+  .stack > * + *{margin-top:10px}
+  .foot{margin-top:auto;padding-top:28px;text-align:center;font-size:13px;color:var(--faint)}
+  .foot a{color:var(--gold)}
+  .gift{font-size:56px;display:block;margin:4px 0 10px;animation:bob 3s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-8px) rotate(-4deg)}}
+  /* Einstellungen (Schalter) */
+  .opts{display:grid;gap:10px;margin:0 0 18px;text-align:left}
+  .opt{position:relative;display:flex;align-items:center;gap:12px;margin:0;padding:12px 14px;border-radius:16px;background:rgba(0,0,0,.2);border:1px solid var(--line);cursor:pointer;color:var(--ink);transition:border-color .2s,background .2s}
+  .opt:has(input:checked){border-color:rgba(232,194,122,.5);background:rgba(232,194,122,.08)}
+  .opt .oi{font-size:22px;flex:0 0 28px;text-align:center}
+  .opt .ot{flex:1;display:block;line-height:1.35}
+  .opt .ot b{display:block;font-size:15px;font-weight:600;color:var(--ink)}
+  .opt .ot small{display:block;color:var(--muted);font-size:12.5px;font-weight:400;margin-top:2px}
+  .opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0;padding:0;border:0;pointer-events:none}
+  .opt .sw{flex:0 0 46px;height:28px;border-radius:999px;background:rgba(255,255,255,.14);position:relative;transition:background .2s}
+  .opt .sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+  .opt input:checked ~ .sw{background:linear-gradient(135deg,var(--gold),var(--gold2))}
+  .opt input:checked ~ .sw::after{transform:translateX(18px)}
+  .opt input:focus-visible ~ .sw{outline:2px solid var(--gold);outline-offset:2px}
+  .opt.locked{opacity:.5;cursor:not-allowed}
+  .always{display:flex;gap:12px;align-items:center;margin:0 0 10px;padding:12px 14px;border-radius:16px;border:1px dashed var(--line);text-align:left;font-size:13px;color:var(--muted);line-height:1.4}
+  .always b{color:var(--ink);display:block;font-size:15px}
+  .always .oi{font-size:22px;flex:0 0 28px;text-align:center}
+  .rules{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:9px;text-align:left}
+  .rules li{display:flex;gap:10px;font-size:14px;color:var(--muted);line-height:1.4}
+  .rules li > span:first-child{flex:0 0 24px;text-align:center}
+  .rules b{color:var(--ink);font-weight:600}
+  /* Ziehung & Ergebnis */
+  .who{border-radius:var(--radius);border:1px solid rgba(232,194,122,.38);background:linear-gradient(160deg,rgba(232,194,122,.17),rgba(214,71,58,.12));padding:24px 16px 26px;margin:8px 0 14px;text-align:center}
+  .who .lbl{display:block;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px}
+  .who .nm{font-family:Fraunces,serif;font-weight:600;font-size:clamp(40px,12vw,62px);line-height:1.04;word-break:break-word}
+  .who .em{font-size:30px;display:block;margin-top:8px}
+  .reveal{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 6px}
+  .reveal.single{grid-template-columns:1fr}
+  .tile{border-radius:var(--radius);border:1px solid var(--line);background:rgba(0,0,0,.22);padding:22px 14px;text-align:center;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+  .tile .lbl{margin-bottom:auto;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .tile > :last-child{margin-bottom:auto}
+  .swatch{width:118px;height:118px;border-radius:50%;border:3px solid rgba(255,255,255,.18);box-shadow:0 18px 40px -12px rgba(0,0,0,.7),inset 0 -10px 30px rgba(0,0,0,.25)}
+  .swatch.unknown{background:conic-gradient(var(--red),var(--gold),#2f9e55,#2f6fd6,#8e5bd6,var(--red))}
+  .cname{font-family:Fraunces,serif;font-size:clamp(24px,6.5vw,34px);font-weight:600;line-height:1.1;word-break:break-word}
+  .bigletter{font-family:Fraunces,serif;font-weight:600;font-size:clamp(120px,34vw,170px);line-height:.9;background:linear-gradient(180deg,#fff3d6,var(--gold) 60%,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 30px rgba(232,194,122,.35))}
+  .shuffling .swatch,.shuffling .bigletter,.shuffling .cname,.shuffling .nm{animation:jitter .12s linear infinite}
+  @keyframes jitter{50%{transform:translateY(-3px)}}
+  .revealed .tile,.revealed .who{animation:land .7s cubic-bezier(.2,1.5,.4,1) both}
+  .revealed .tile:nth-child(2){animation-delay:.15s}
+  @keyframes land{from{transform:scale(.85);opacity:.3}}
+  .banner{display:flex;gap:14px;align-items:flex-start;text-align:left;border-radius:var(--radius);padding:18px 18px;margin:14px 0 0}
+  .banner .ic{font-size:36px;line-height:1}
+  .banner b{display:block;font-family:Fraunces,serif;font-size:21px;font-weight:600;margin-bottom:4px}
+  .banner p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink);opacity:.9}
+  .banner.joker{background:linear-gradient(135deg,rgba(232,194,122,.28),rgba(201,154,74,.1));border:1px solid rgba(232,194,122,.55)}
+  .banner.loser{background:linear-gradient(135deg,rgba(214,71,58,.28),rgba(169,46,37,.1));border:1px solid rgba(214,71,58,.55)}
+  .banner.big{flex-direction:column;align-items:center;text-align:center;padding:28px 18px;margin-top:0}
+  .banner.big .ic{font-size:72px;animation:bob 3s ease-in-out infinite}
+  .example{margin:14px 0 0;padding:16px 18px;border-radius:18px;background:rgba(0,0,0,.22);border:1px dashed rgba(232,194,122,.45);text-align:left}
+  .example .t{margin:0 0 6px;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .example .ex{margin:0 0 12px;font-family:Fraunces,serif;font-size:19px;line-height:1.35}
+  .banner.angel{background:linear-gradient(135deg,rgba(255,236,170,.26),rgba(140,190,240,.12));border:1px solid rgba(255,236,170,.55)}
+  .xmas{position:relative;z-index:1;text-align:center;padding:6px 18px 24px;font-family:Fraunces,serif;font-style:italic;font-size:14px;letter-spacing:.02em;color:var(--faint)}
+  .xmas span{font-style:normal;color:var(--gold);opacity:.75;font-size:11px;margin:0 8px}
+  .sheet{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(520px,calc(100vw - 24px));z-index:40;display:flex;gap:6px 14px;align-items:center;flex-wrap:wrap;padding:16px 18px;border-radius:20px;background:rgba(14,40,31,.97);border:1px solid rgba(232,194,122,.5);box-shadow:0 20px 60px rgba(0,0,0,.55);animation:sheetin .5s cubic-bezier(.2,1.2,.4,1) both}
+  .sheet .ic{font-size:30px}
+  .sheet .tx{flex:1;min-width:200px}
+  .sheet b{display:block;font-family:Fraunces,serif;font-size:18px;margin-bottom:2px}
+  .sheet p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+  .sheet .acts{display:flex;gap:8px;width:100%;justify-content:flex-end;margin-top:6px}
+  @keyframes sheetin{from{opacity:0;transform:translateX(-50%) translateY(30px)}}
+  .rrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);text-align:left}
+  .rrow:first-of-type{border-top:0}
+  #fx{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;opacity:0;animation:fxin .5s ease forwards;cursor:pointer;text-align:center;padding:24px}
+  #fx.out{animation:fxout .6s ease forwards}
+  @keyframes fxin{to{opacity:1}}
+  @keyframes fxout{from{opacity:1}to{opacity:0}}
+  #fx.angel{background:radial-gradient(circle at 50% 40%,rgba(255,248,222,.98) 0%,rgba(255,228,150,.94) 30%,rgba(120,170,230,.95) 100%)}
+  #fx.joker{background:radial-gradient(circle at 50% 40%,rgba(130,44,170,.97) 0%,rgba(38,10,78,.98) 72%)}
+  #fx .rays{position:absolute;left:50%;top:40%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;animation:spin 16s linear infinite}
+  #fx.angel .rays{background:repeating-conic-gradient(rgba(255,255,255,.3) 0 9deg,transparent 9deg 18deg)}
+  #fx.joker .rays{background:repeating-conic-gradient(rgba(255,216,107,.2) 0 9deg,transparent 9deg 18deg)}
+  #fx .p{position:absolute;top:-14vh;left:var(--x);font-size:var(--s);font-style:normal;animation:fall var(--d) var(--l) linear both;will-change:transform}
+  @keyframes fall{to{transform:translate3d(var(--dx),122vh,0) rotate(var(--r))}}
+  #fx .big{position:relative;font-size:clamp(110px,34vw,190px);line-height:1;animation:drop 1s cubic-bezier(.2,1.3,.4,1) both,bob 2.4s 1s ease-in-out infinite;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35))}
+  #fx .big.flip{animation:drop 1s cubic-bezier(.2,1.3,.4,1) both,flipy 1.6s 1s ease-in-out infinite}
+  @keyframes drop{from{transform:translateY(-120vh) rotate(-30deg) scale(.5)}60%{transform:translateY(0) rotate(8deg) scale(1.12)}}
+  @keyframes flipy{50%{transform:rotateY(180deg) scale(1.08)}}
+  #fx .ttl{position:relative;font-family:Fraunces,serif;font-weight:700;font-size:clamp(38px,11vw,72px);line-height:1.05;margin:8px 0 6px;animation:fxtxt .7s .5s ease both}
+  #fx .sb{position:relative;font-size:clamp(16px,4.4vw,22px);max-width:19em;font-weight:500;animation:fxtxt .7s .8s ease both}
+  #fx.angel .ttl,#fx.angel .sb{color:#4a3510}
+  #fx.joker .ttl{color:#ffd86b}
+  #fx.joker .sb{color:#fff}
+  @keyframes fxtxt{from{opacity:0;transform:translateY(24px) scale(.9)}}
+  .xmas a{display:inline-block;margin-bottom:10px;padding:8px 16px;border-radius:999px;border:1px solid rgba(232,194,122,.35);background:rgba(232,194,122,.07);font-family:Inter,system-ui,sans-serif;font-style:normal;font-size:13px;color:var(--gold);text-decoration:none}
+  .xmas a:hover{background:rgba(232,194,122,.14)}
+  .xmas .gr{display:block}
+  .inst{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 18px 12px}
+  .inst > div{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:14px 14px 14px 16px;border-radius:18px;background:rgba(232,194,122,.08);border:1px solid rgba(232,194,122,.3)}
+  .inst .ic{font-size:28px}
+  .inst .tx{flex:1;min-width:190px}
+  .inst b{display:block;font-family:Fraunces,serif;font-size:16px;margin-bottom:2px}
+  .inst p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+  .inst .acts{display:flex;align-items:center;gap:6px;margin-left:auto}
+  .inst .x{background:none;border:0;color:var(--faint);font-size:16px;padding:8px;cursor:pointer}
+  .modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.62);display:flex;align-items:flex-end;justify-content:center;padding:12px;animation:fxin .3s ease both}
+  .modal .box{width:min(520px,100%);max-height:92vh;overflow:auto;background:#0e281f;border:1px solid rgba(232,194,122,.5);border-radius:24px;padding:24px 22px 20px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:modalin .4s cubic-bezier(.2,1.1,.4,1) both}
+  @keyframes modalin{from{opacity:0;transform:translateY(40px)}}
+  .modal h2{margin:0 0 14px}
+  .isteps{list-style:none;margin:0 0 18px;padding:0;counter-reset:s}
+  .isteps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:10px 0;font-size:15px;line-height:1.5;color:var(--ink)}
+  .isteps li::before{content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1d07;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .isteps svg{vertical-align:-5px;margin:0 2px}
+  .slots{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:12px;margin:12px 0 0}
+  .slot{border-radius:18px;border:1px solid var(--line);background:rgba(0,0,0,.22);padding:14px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;min-height:176px}
+  .slot .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .swatch.mini{width:76px;height:76px;transition:background .6s}
+  .cname.mini{font-size:20px}
+  .bigletter.mini{font-size:88px}
+  .loading{display:flex;justify-content:center;padding:60px 0}
+  .spinner{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.12);border-top-color:var(--gold);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#fff8ea;color:#1d140a;padding:12px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;transition:.3s;z-index:10;pointer-events:none;max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .fade{animation:fade .45s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+<main id="app"><div class="loading"><div class="spinner"></div></div></main>
+<div class="inst" id="inst"></div>
+<footer class="xmas"><a href="/" id="newparty">✦ Eigene Feier erstellen</a><span class="gr"><span>✦</span>Martin wünscht Dir frohe Weihnachten<span>✦</span></span></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const app = document.getElementById('app');
+  const qs = new URLSearchParams(location.search);
+  const PID = qs.get('p');
+  const ADMIN = qs.get('admin');
+  const LS = {
+    get(k){ try{ return localStorage.getItem(k); }catch{ return null; } },
+    set(k,v){ try{ localStorage.setItem(k,v); }catch{} },
+    del(k){ try{ localStorage.removeItem(k); }catch{} },
+  };
+  const tokKey = id => 'wichtel:tok:' + id;
+  const admKey = id => 'wichtel:admin:' + id;
+
+  // Persönlicher Link (?t=…) stellt die Teilnahme in diesem Browser wieder her
+  if (PID && qs.get('t')) { try { localStorage.setItem('wichtel:tok:' + PID, qs.get('t')); } catch {} history.replaceState(null, '', '/?p=' + PID + (qs.get('me') ? '&me=1' : '')); }
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- Abfragen (sparsam: pausiert, wenn der Tab im Hintergrund ist) ---------- */
+  let pollTimer = null, curFn = null, paused = false, lastActive = Date.now();
+  const IDLE_MS = 45 * 60 * 1000;
+  const stopPoll = () => { clearTimeout(pollTimer); pollTimer = null; curFn = null; paused = false; };
+  function schedule(fn, ms = 5000) {
+    clearTimeout(pollTimer); pollTimer = null; curFn = fn;
+    if (document.hidden || Date.now() - lastActive > IDLE_MS) { paused = true; return; }
+    paused = false;
+    pollTimer = setTimeout(fn, ms);
+  }
+  function wake() {
+    lastActive = Date.now();
+    if (paused && curFn) { const f = curFn; paused = false; f(); }
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+  ['pointerdown', 'keydown', 'touchstart'].forEach(e => addEventListener(e, wake, { passive: true }));
+
+  async function api(path, opts) {
+    const r = await fetch('/api/' + path, opts);
+    const d = await r.json().catch(() => ({ error: 'Der Server hat unerwartet geantwortet.' }));
+    if (!r.ok) throw Object.assign(new Error(d.error || 'Etwas ist schiefgelaufen.'), { status: r.status });
+    return d;
+  }
+  const post = (p, b) => api(p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
+  const status = (extra = {}) => api('status?' + new URLSearchParams({ id: PID, ...extra }));
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); toast('Link kopiert ✓'); }
+    catch { prompt('Link kopieren:', text); }
+  }
+
+  const brand = `<a class="brand" href="/"><span class="star">✦</span> Wichteln</a>`;
+  const linkFor = id => `${location.origin}/?p=${id}`;
+  const adminLinkFor = (id, a) => `${location.origin}/?p=${id}&admin=${a}`;
+
+  function ring(count, total) {
+    const C = 2 * Math.PI * 74;
+    const off = C * (1 - (total ? count / total : 0));
+    return `<div class="ring"><svg width="170" height="170" viewBox="0 0 170 170">
+      <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#e8c27a"/><stop offset="1" stop-color="#d6473a"/></linearGradient></defs>
+      <circle class="track" cx="85" cy="85" r="74"/>
+      <circle class="bar" cx="85" cy="85" r="74" stroke-dasharray="${C}" stroke-dashoffset="${off}"/>
+    </svg><div class="num">${count}<span>/${total}</span></div></div>`;
+  }
+  function chips(names, total) {
+    let h = names.map(n => `<span class="chip">${esc(n)}</span>`).join('');
+    for (let i = names.length; i < total; i++) h += `<span class="chip empty">frei</span>`;
+    return `<div class="chips">${h}</div>`;
+  }
+  function errorView(msg) {
+    stopPoll();
+    const gone = /gelöscht/.test(msg);
+    app.innerHTML = `${brand}<section class="card center fade"><span class="gift">🎄</span><h2>${gone ? 'Event gelöscht' : 'Hoppla'}</h2><p class="lead">${esc(msg)}</p><a class="btn" href="/">Neue Feier erstellen</a></section>`;
+  }
+
+  /* ---------- Einstellungen ---------- */
+  const OPTS = [
+    ['useColor',  '🎨', 'Farbe',            'Alle werfen eine Farbe in den Topf und ziehen später eine fremde.'],
+    ['useLetter', '🔤', 'Anfangsbuchstabe', 'Dasselbe mit einem Buchstaben – dazu gibt es ein witziges „Bloß nicht verschenken“-Beispiel.'],
+    ['joker',     '🃏', 'Joker',            'Eine zufällige Person darf sich ihr Geschenk ganz frei aussuchen – ohne Farbe und Buchstabe.'],
+    ['loser',     '😇', 'Engel',            'Eine zufällige Person ist der Engel und bringt zusätzlich für alle ein kleines Geschenk mit (max. 1–2 € pro Person).'],
+  ];
+  const DEFAULTS = { useColor: true, useLetter: true, joker: false, loser: false };
+  function switchesHtml(v, locked = []) {
+    return `<div class="opts">${OPTS.map(([key, ic, t, d]) => {
+      const lk = locked.includes(key);
+      return `<label class="opt${lk ? ' locked' : ''}"><span class="oi">${ic}</span><span class="ot"><b>${t}</b><small>${d}</small></span>
+        <input type="checkbox" data-opt="${key}" ${v[key] ? 'checked' : ''} ${lk ? 'disabled' : ''}><span class="sw"></span></label>`;
+    }).join('')}</div>`;
+  }
+  function rulesHtml(set, total) {
+    const li = (ic, t) => `<li><span>${ic}</span><span>${t}</span></li>`;
+    let h = li('🎁', '<b>Wen du beschenkst</b> – wird dir bei der Ziehung zugelost.');
+    if (set.useColor) h += li('🎨', '<b>Eine Farbe</b> – dein Geschenk soll diese Farbe haben.');
+    if (set.useLetter) h += li('🔤', '<b>Ein Buchstabe</b> – dein Geschenk beginnt damit (inkl. witzigem Gegenbeispiel).');
+    if (set.joker) h += li('🃏', '<b>Ein Joker</b> – eine Person darf völlig frei schenken. Wer, bleibt geheim.');
+    if (set.loser) h += li('😇', '<b>Ein Engel</b> – eine Person bringt für alle ein Mini-Geschenk (max. 1–2 €) mit. Wer, bleibt geheim.');
+    return `<ul class="rules">${h}</ul>`;
+  }
+
+  /* ---------- Farben ---------- */
+  const RAINBOW = 'conic-gradient(#e53935,#fb8c00,#fdd835,#43a047,#1e88e5,#8e24aa,#e53935)';
+  const COLORS = {
+    rot:'#d63a2f', dunkelrot:'#8e1b1b', hellrot:'#ef6a5e', weinrot:'#722f37', bordeaux:'#6d1a2a', kirschrot:'#b0172b',
+    blau:'#2f6fd6', dunkelblau:'#1d2f6b', hellblau:'#8cc3f0', himmelblau:'#87ceeb', navy:'#1b2a52', marineblau:'#1b2a52', königsblau:'#2347b5', koenigsblau:'#2347b5', eisblau:'#cfe9f7',
+    türkis:'#2ec4b6', tuerkis:'#2ec4b6', petrol:'#1f6f78', cyan:'#22c7e0', aqua:'#5fd7e0',
+    grün:'#2f9e55', gruen:'#2f9e55', dunkelgrün:'#1e5b3a', dunkelgruen:'#1e5b3a', hellgrün:'#9be08f', hellgruen:'#9be08f', tannengrün:'#1f4d35', tannengruen:'#1f4d35', mint:'#a8e6cf', oliv:'#7a7a2e', salbei:'#9cae8f',
+    gelb:'#f3d03e', senfgelb:'#d4a017', zitronengelb:'#fff04a', ocker:'#cc9933',
+    orange:'#f08a24', apricot:'#f9b384', lachs:'#f99a7c', koralle:'#ff7f6a', terrakotta:'#c8643b',
+    lila:'#8e5bd6', violett:'#7a3fc4', flieder:'#c8a2c8', lavendel:'#b9a6e8', aubergine:'#4b1f43', pflaume:'#6b2d5c',
+    pink:'#ee5fa7', rosa:'#f7b6c9', altrosa:'#d4a5a5', magenta:'#d1287a', fuchsia:'#d1287a', pfirsich:'#ffcba4',
+    schwarz:'#111111', weiß:'#fafafa', weiss:'#fafafa', grau:'#8a8f98', hellgrau:'#c9cdd2', dunkelgrau:'#4a4f57', anthrazit:'#383e42',
+    silber:'linear-gradient(135deg,#f1f3f6,#a9afb8 45%,#eef0f3 60%,#8e959e)',
+    gold:'linear-gradient(135deg,#fff1c1,#d4af37 45%,#f7e08a 60%,#a8811f)',
+    roségold:'linear-gradient(135deg,#ffe1d6,#b76e79 50%,#f3c4b6)', rosegold:'linear-gradient(135deg,#ffe1d6,#b76e79 50%,#f3c4b6)',
+    bronze:'linear-gradient(135deg,#f0c08a,#a8692c 50%,#d9a066)', kupfer:'linear-gradient(135deg,#f3b88a,#b8733f 50%,#e09a68)',
+    braun:'#7b4a2a', hellbraun:'#a97848', dunkelbraun:'#4a2c17', schokobraun:'#4a2c17', beige:'#e3d3b2', creme:'#f4ead2', sand:'#d8c39a', khaki:'#c3b091', taupe:'#8b7d6b', camel:'#c19a6b',
+    bunt:RAINBOW, regenbogen:RAINBOW, mehrfarbig:RAINBOW, transparent:'repeating-conic-gradient(#ffffff22 0 25%,#ffffff08 0 50%) 0 0/20px 20px',
+  };
+  const COLOR_KEYS = Object.keys(COLORS).sort((a, b) => b.length - a.length);
+  function colorCss(name) {
+    const n = String(name || '').trim().toLowerCase();
+    if (!n) return null;
+    if (COLORS[n]) return COLORS[n];
+    try { if (CSS.supports('color', n)) return n; } catch {}
+    for (const key of COLOR_KEYS) if (n.includes(key)) return COLORS[key];
+    return null;
+  }
+  const swatchStyle = name => { const c = colorCss(name); return c ? `style="background:${c}"` : ''; };
+
+  /* ---------- „Bloß nicht verschenken“-Beispiele (komplett im Browser, kostet nichts) ---------- */
+  const NOUNS = {
+    A:'n:Alpaka m:Ameisenbär f:Aktentasche m:Aal n:Aquarium m:Anglerhut',
+    B:'m:Bagger f:Badeente m:Biber f:Bohrmaschine f:Bockwurst m:Blumenkohl',
+    C:'n:Chamäleon m:Chihuahua f:Currywurst m:Cowboyhut f:Computermaus f:Campingtoilette',
+    D:'m:Dackel m:Dinosaurier f:Dauerwelle m:Dönerspieß f:Dachrinne m:Dudelsack',
+    E:'f:Ente m:Elch m:Elefant m:Eierkocher m:Esel m:Eimer',
+    F:'m:Frosch f:Fußpilzcreme m:Föhn f:Fliegenklatsche m:Flamingo m:Fahrradsattel',
+    G:'m:Gartenzwerg f:Gurke m:Gorilla f:Gießkanne m:Gummihandschuh f:Geschirrbürste',
+    H:'m:Hamster n:Hufeisen m:Hering n:Hühneraugenpflaster m:Hirsch m:Hustensaft',
+    I:'m:Igel n:Iglu n:Insektenspray f:Isomatte f:Ingwerknolle n:Insektenhotel',
+    J:'m:Jaguar f:Jogginghose f:Jeansjacke n:Jagdhorn n:Jo-Jo f:Jacke',
+    K:'n:Känguru f:Kartoffel m:Kaktus f:Klobürste m:Krokodil f:Kuckucksuhr',
+    L:'m:Leguan n:Lama f:Lavalampe m:Lockenwickler m:Luftballon f:Leberwurst',
+    M:'f:Maus m:Maulwurf m:Mopp f:Mundharmonika m:Mettigel f:Mülltonne',
+    N:'n:Nilpferd n:Nashorn n:Nasenspray f:Nagelfeile m:Nussknacker n:Nachthemd',
+    O:'m:Oktopus f:Orange m:Ohrwurm n:Opernglas f:Olive m:Ofenhandschuh',
+    P:'m:Pinguin f:Plastikpalme m:Pandabär f:Pfanne n:Pflaster m:Papagei',
+    Q:'f:Qualle m:Quark f:Quietscheente m:Quirl f:Quasselstrippe m:Quastenflosser',
+    R:'m:Regenwurm n:Rentier f:Ratte f:Raufasertapete m:Rührbesen f:Rübe',
+    S:'n:Stinktier f:Socke m:Seestern f:Schnecke m:Staubsauger m:Schnorchel',
+    T:'m:Tintenfisch m:Tausendfüßler f:Tiefkühltruhe m:Toaster f:Tuba m:Tukan',
+    U:'f:Unterhose m:Uhu f:Unke m:Untersetzer f:Ukulele m:Umzugskarton',
+    V:'m:Vogel m:Vorhang f:Vase m:Ventilator f:Vogelscheuche m:Vorleger',
+    W:'m:Wal f:Wärmflasche m:Waschbär m:Wurm f:Wasserpistole m:Wecker',
+    X:'n:Xylophon f:XXL-Socke m:XXL-Teddy n:XXL-Kuscheltier',
+    Y:'m:Yeti f:Yacht f:Yogamatte n:Yak f:Yucca-Palme n:Yo-Yo',
+    Z:'f:Zahnbürste m:Zaunkönig f:Zitrone n:Zebra m:Zahnstocher f:Zwiebel',
+    'Ä':'n:Äffchen m:Ärmelschoner',
+    'Ö':'n:Ölgemälde f:Ölsardine m:Ölwechsel-Gutschein',
+    'Ü':'n:Überraschungsei m:Überzieher f:Überwachungskamera',
+  };
+  const NOUN_FALLBACK = 'm:Plüschhai n:Gummihuhn f:Klobürste m:Stinkkäse f:Gurke n:Quietschetier';
+  const parseNouns = str => str.split(' ').map(x => ({ g: x[0], w: x.slice(2) }));
+  const ART = { nom: { m: 'ein', f: 'eine', n: 'ein' }, acc: { m: 'einen', f: 'eine', n: 'ein' }, dat: { m: 'einem', f: 'einer', n: 'einem' } };
+  const END = { nom: { m: 'er', f: 'e', n: 'es' }, acc: { m: 'en', f: 'e', n: 'es' }, dat: { m: 'en', f: 'en', n: 'en' } };
+  const INVARIANT = new Set(['rosa', 'lila', 'beige', 'creme', 'khaki', 'mint', 'bordeaux', 'petrol', 'cyan', 'magenta', 'navy']);
+  const REGULAR = /^[a-zäöüß-]*(rot|blau|grün|gruen|gelb|braun|grau|schwarz|weiß|weiss|bunt|pink|türkis|tuerkis|violett|gold|silber)$/;
+
+  // Nominalgruppe mit Farbe, z. B. „einen pinken Leguan“ – oder „einen Leguan in Mauve“, wenn die Farbe nicht sicher zu beugen ist
+  function np(cs, g, noun, color) {
+    const art = ART[cs][g];
+    const raw = String(color || '').trim();
+    if (!raw) return `${art} ${noun}`;
+    const c = raw.toLowerCase().replace(/[^a-zäöüß-]/g, '');
+    if (INVARIANT.has(c)) return `${art} ${c} ${noun}`;
+    if (c && c.length <= 22 && REGULAR.test(c)) {
+      const stem = c.endsWith('gold') ? c + 'en' : c.endsWith('silber') ? c + 'n' : c;
+      return `${art} ${stem}${END[cs][g]} ${noun}`;
+    }
+    return `${art} ${noun} in ${raw.charAt(0).toLocaleUpperCase('de-DE') + raw.slice(1)}`;
+  }
+  const hash = str => { let h = 5381; for (const ch of str) h = ((h << 5) + h + ch.codePointAt(0)) >>> 0; return h; };
+  const cap = t => t.charAt(0).toLocaleUpperCase('de-DE') + t.slice(1);
+  function example(letter, color, seedName) {
+    const L = String(letter || '').toLocaleUpperCase('de-DE')[0] || '';
+    const list = parseNouns(NOUNS[L] || NOUN_FALLBACK);
+    const h = hash(`${L}|${String(color || '').toLowerCase()}|${seedName}`);
+    const n = list[h % list.length];
+    const nom = np('nom', n.g, n.w, color), acc = np('acc', n.g, n.w, color), dat = np('dat', n.g, n.w, color);
+    const T = [
+      `Wie wäre es mit ${dat}?`,
+      `Ich hätte da einen Tipp: ${acc}.`,
+      `${cap(nom)} kommt unterm Baum immer gut an.`,
+      `Schenk doch ${acc} – das vergisst so schnell keiner.`,
+      `Wie wäre es mit ${dat}? Ein echter Volltreffer.`,
+      `Mein Geheimtipp: ${acc}.`,
+    ];
+    return T[(h >>> 3) % T.length];
+  }
+
+  /* ---------- Startseite ---------- */
+  function homeView() {
+    stopPoll();
+    document.title = 'Wichteln ✦ Weihnachtslosung';
+    app.innerHTML = `${brand}
+      <section class="card fade">
+        <p class="eyebrow">Weihnachts-Wichteln</p>
+        <h1>Wer schenkt<br><em>wem?</em></h1>
+        <p class="lead">Leg eine Feier an und teil den Link. Alle tragen sich mit Namen und PIN ein – danach wird gelost, wen man beschenkt. Auf Wunsch mit Farbe, Buchstabe, Joker und Engel.</p>
+        <form id="create" autocomplete="off">
+          <label>Name der Feier<input name="name" maxlength="60" placeholder="z. B. Weihnachtsfeier WG" required></label>
+          <label>Anzahl Teilnehmer (inklusive dir)
+            <div class="stepper"><button type="button" data-d="-1" aria-label="weniger">−</button><input name="total" type="number" min="2" max="50" value="6" inputmode="numeric"><button type="button" data-d="1" aria-label="mehr">+</button></div>
+          </label>
+          <label>Budget pro Geschenk in € <small style="color:var(--muted)">(optional)</small>
+            <input name="budget" type="number" min="1" max="10000" inputmode="numeric" placeholder="z. B. 15"></label>
+          <p class="eyebrow" style="margin-top:22px">Einstellungen</p>
+          <div class="always"><span class="oi">🎁</span><span><b>Wer beschenkt wen</b>Immer dabei: Jede Person zieht eine andere Person (nie sich selbst).</span></div>
+          ${switchesHtml(DEFAULTS)}
+          <button class="btn primary" type="submit">Feier erstellen</button>
+          <p class="err"></p>
+        </form>
+      </section>
+      <ol class="steps"><li><b>1</b>Feier anlegen</li><li><b>2</b>Link teilen</li><li><b>3</b>Losung starten</li></ol>
+`;
+    const f = document.getElementById('create');
+    const totalInput = f.total;
+    f.querySelectorAll('[data-d]').forEach(b => b.onclick = () => {
+      totalInput.value = Math.min(50, Math.max(2, (parseInt(totalInput.value, 10) || 2) + Number(b.dataset.d)));
+    });
+    f.onsubmit = async e => {
+      e.preventDefault();
+      const btn = f.querySelector('button[type=submit]'); const err = f.querySelector('.err');
+      btn.disabled = true; err.textContent = '';
+      const opt = k => f.querySelector(`[data-opt=${k}]`).checked;
+      try {
+        const d = await post('create', { name: f.name.value, total: totalInput.value, useColor: opt('useColor'), useLetter: opt('useLetter'), joker: opt('joker'), loser: opt('loser'), budget: f.budget.value });
+        LS.set(admKey(d.id), d.admin);
+        location.href = `/?p=${d.id}&admin=${d.admin}`;
+      } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
+    };
+  }
+
+  /* ---------- Verwaltung (Ersteller) ---------- */
+  let lastAdmin = '';
+  const axOpen = new Set(); let axWrapOpen = false;
+  async function adminView() {
+    LS.set(admKey(PID), ADMIN);
+    let s;
+    try { s = await status({ admin: ADMIN }); }
+    catch (e) { if (e.status === 410 || !app.querySelector('.card')) return errorView(e.message); schedule(adminView, 8000); return; }
+    if (!s.isAdmin) return errorView('Dieser Verwaltungs-Link ist ungültig.');
+
+    const sig = JSON.stringify(s);
+    if (sig !== lastAdmin) {
+      lastAdmin = sig;
+      document.title = s.name + ' · Wichteln';
+      const full = s.count >= s.total;
+      const pLink = linkFor(PID);
+      const joined = !!LS.get(tokKey(PID));
+      const set = s.settings;
+      const sortedNames = [...s.names].sort((a, b) => a.localeCompare(b, 'de'));
+      let action, settingsCard = '';
+      if (s.status === 'open') {
+        const done = isDone(s);
+        action = `<div class="center"><p class="eyebrow">${done ? 'Losung abgeschlossen' : 'Losung läuft'}</p><h2>${done ? 'Alle haben gezogen 🎉' : `${s.drawnCount} von ${s.total} haben gezogen`}</h2>
+          <p class="hint">Du siehst hier bewusst nicht, wer wen oder was gezogen hat – so kannst du ganz normal mitmachen.</p>
+          ${(s.pending || []).length ? `<p class="eyebrow" style="margin:18px 0 4px">Noch nicht gezogen</p>${s.pending.map(n => `<div class="rrow"><span>${esc(n)}</span><button class="btn small" data-rem="${esc(n)}">🔔 Erinnern</button></div>`).join('')}` : doneBanner()}</div>`;
+      } else {
+        action = `<button class="btn gold" id="release" ${full ? '' : 'disabled'}>✦ Losung freigeben</button>
+          <p class="hint center">${full ? 'Alle sind dabei – du kannst die Losung starten.' : `Noch ${s.total - s.count} ${s.total - s.count === 1 ? 'Einreichung fehlt' : 'Einreichungen fehlen'}.`}</p>
+          <p class="err"></p>`;
+        const locked = s.count > 0 ? ['useColor', 'useLetter'] : [];
+        settingsCard = `<section class="card">
+          <h2>Einstellungen</h2>
+          <p class="hint" style="margin:0 0 14px">Änderungen wirken sofort und gelten für alle. ${locked.length ? 'Farbe und Buchstabe sind gesperrt, weil schon jemand eingereicht hat.' : ''}</p>
+          <div class="always"><span class="oi">🎁</span><span><b>Wer beschenkt wen</b>Immer dabei. Alle können vor der Losung geheim Personen abwählen.</span></div>
+          ${switchesHtml(set, locked)}
+          <label style="margin-top:16px">💶 Budget pro Geschenk in € <small style="color:var(--muted)">(leer = keins)</small>
+            <input id="budget" type="number" min="1" max="10000" inputmode="numeric" placeholder="z. B. 15" value="${set.budget || ''}"></label>
+          <p class="hint" style="margin-top:6px">Wird jedem nach der Ziehung als Orientierung angezeigt.</p>
+          <p class="err" id="seterr"></p>
+        </section>
+        <section class="card">
+          <details class="axwrap" ${axWrapOpen ? 'open' : ''}><summary><h2 style="margin:0">🚫 Wer darf wen nicht ziehen?</h2><span class="axhint">optional</span></summary>
+          <p class="hint" style="margin:12px 0 12px">Nur für dich sichtbar – die Teilnehmer erfahren nichts davon. Die Animation mischt weiterhin alle Namen, aber gezogen wird nie jemand, den du hier abgewählt hast.</p>
+          ${s.names.length < 3 ? `<p class="hint">Sobald sich mehr Leute eingetragen haben, kannst du das hier einstellen.</p>` : sortedNames.map(g => {
+            const sel = (s.adminEx || {})[g] || [];
+            return `<details class="axp" data-g="${esc(g)}" ${axOpen.has(g) ? 'open' : ''}><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
+              <small style="color:var(--muted)">${esc(g)} darf nicht ziehen:</small><div class="chips" style="justify-content:flex-start">${sortedNames.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
+          }).join('')}
+          <p class="err" id="axerr"></p>
+          </details>
+        </section>`;
+      }
+      app.innerHTML = `${brand}
+        <section class="card center fade">
+          <p class="eyebrow">Verwaltung</p>
+          <h1 style="font-size:clamp(30px,7vw,40px)">${esc(s.name)}</h1>
+          ${ring(s.count, s.total)}
+          <p class="sub">Teilnehmer haben eingereicht</p>
+          ${chips(s.names, s.total)}
+        </section>
+        <section class="card">${action}</section>
+        ${settingsCard}
+        <section class="card">
+          <h2>Link für die Teilnehmer</h2>
+          <div class="linkbox"><code>${esc(pLink)}</code><button class="btn small" id="cp">Kopieren</button></div>
+          <div class="stack">
+            ${navigator.share ? `<button class="btn" id="share">Link teilen …</button>` : ''}
+            <a class="btn primary" href="${esc(pLink)}&me=1">${joined ? 'Zu meiner Teilnahme' : 'Selbst mitmachen →'}</a>
+          </div>
+          <p class="hint box">💡 Du machst selbst mit? Öffne den Teilnehmer-Link und trage dich genauso ein wie alle anderen. Was gezogen wird, siehst du hier nicht.</p>
+        </section>
+        <section class="card">
+          <h2>Dein Verwaltungs-Link</h2>
+          <p class="hint" style="margin-top:0">Speichere ihn dir – nur damit kommst du zurück zu dieser Seite.</p>
+          <div class="linkbox"><code>${esc(adminLinkFor(PID, ADMIN))}</code><button class="btn small" id="cpa">Kopieren</button></div>
+        </section>
+        <p class="foot"><a href="/">Neue Feier erstellen</a></p>`;
+      document.getElementById('cp').onclick = () => copy(pLink);
+      document.getElementById('cpa').onclick = () => copy(adminLinkFor(PID, ADMIN));
+      const sh = document.getElementById('share');
+      if (sh) sh.onclick = () => navigator.share({ title: s.name, text: `Mach mit beim Wichteln „${s.name}" 🎁`, url: pLink }).catch(() => {});
+      app.querySelectorAll('[data-opt]').forEach(inp => inp.onchange = async () => {
+        const body = { id: PID, admin: ADMIN };
+        app.querySelectorAll('[data-opt]').forEach(i => { body[i.dataset.opt] = i.checked; });
+        const bi = document.getElementById('budget'); if (bi) body.budget = bi.value;
+        try { await post('settings', body); lastAdmin = ''; stopPoll(); adminView(); }
+        catch (e) { document.getElementById('seterr').textContent = e.message; lastAdmin = ''; schedule(adminView, 1500); }
+      });
+      const bud = document.getElementById('budget');
+      if (bud) bud.onchange = async () => {
+        try { await post('settings', { id: PID, admin: ADMIN, budget: bud.value }); toast(bud.value ? `Budget: ${bud.value} € 💶` : 'Kein Budget'); document.getElementById('seterr').textContent = ''; }
+        catch (e) { document.getElementById('seterr').textContent = e.message; }
+      };
+      const aw = app.querySelector('details.axwrap');
+      if (aw) aw.addEventListener('toggle', () => { axWrapOpen = aw.open; });
+      app.querySelectorAll('details.axp').forEach(d => {
+        d.addEventListener('toggle', () => { d.open ? axOpen.add(d.dataset.g) : axOpen.delete(d.dataset.g); });
+        d.querySelectorAll('[data-ax]').forEach(c => c.onclick = async () => {
+          c.classList.toggle('on');
+          const ex = {};
+          app.querySelectorAll('details.axp').forEach(x => { const l = [...x.querySelectorAll('[data-ax].on')].map(y => y.dataset.ax); if (l.length) ex[x.dataset.g] = l; });
+          d.querySelector('summary em').textContent = d.querySelectorAll('[data-ax].on').length ? d.querySelectorAll('[data-ax].on').length + ' ausgeschlossen' : 'keine';
+          try { await post('settings', { id: PID, admin: ADMIN, ex }); document.getElementById('axerr').textContent = ''; }
+          catch (e) { document.getElementById('axerr').textContent = e.message; c.classList.toggle('on'); }
+        });
+      });
+      app.querySelectorAll('[data-rem]').forEach(b => b.onclick = async () => {
+        const n = b.dataset.rem; b.disabled = true;
+        try {
+          const r = await post('push', { action: 'remind', id: PID, admin: ADMIN, name: n });
+          toast(r.result === 'sent' ? `${n} wurde erinnert 🔔`
+            : r.result === 'nosub' ? `${n} hat Benachrichtigungen nicht erlaubt – bitte direkt Bescheid sagen.`
+            : r.result === 'wait' ? `${n} wurde gerade erst erinnert – bitte kurz warten.`
+            : `${n} hat schon gezogen.`);
+        } catch (e) { toast(e.message); }
+        setTimeout(() => { b.disabled = false; }, 4000);
+      });
+      const rel = document.getElementById('release');
+      if (rel) rel.onclick = async () => {
+        rel.disabled = true;
+        try { await post('release', { id: PID, admin: ADMIN }); toast('Losung freigegeben 🎄'); lastAdmin = ''; stopPoll(); adminView(); }
+        catch (e) { rel.parentElement.querySelector('.err').textContent = e.message; rel.disabled = false; }
+      };
+    }
+    schedule(adminView);
+  }
+
+  /* ---------- Teilnehmer ---------- */
+  let lastPart = '';
+  let exSet = null, exTimer = null;
+  let claimMode = false;
+
+  async function participantView() {
+    const token = LS.get(tokKey(PID));
+    let s;
+    try { s = await status({ ...(token ? { token } : {}), ...(LS.get(admKey(PID)) ? { admin: LS.get(admKey(PID)) } : {}) }); }
+    catch (e) { if (e.status === 410 || !app.querySelector('.card')) return errorView(e.message); schedule(participantView, 8000); return; }
+
+    if (token && !s.me) LS.del(tokKey(PID));
+    const me = s.me;
+    if (me && me.adminKey && !qs.get('me')) { LS.set(admKey(PID), me.adminKey); location.replace(adminLinkFor(PID, me.adminKey)); return; }
+    if (me) pushSync();
+    const adminLink = LS.get(admKey(PID));
+    const foot = `<p class="foot">${adminLink ? `<a href="/?p=${esc(PID)}&admin=${esc(adminLink)}">Zur Verwaltung</a>` : ''}</p>`;
+    document.title = s.name + ' · Wichteln';
+    s.settings = { ...DEFAULTS, target: false, ...s.settings };
+
+    // Ergebnis schon vorhanden
+    if (me && me.draw) { stopPoll(); return resultView(s, me, foot, false); }
+
+    // Losung offen, ich bin dabei → ziehen
+    if (me && s.status === 'open') { stopPoll(); return drawView(s, me, foot); }
+
+    // Ich bin dabei, warte auf die anderen
+    if (me) { waitingView(s, me, foot); return; }
+
+    // Noch nicht dabei
+    stopPoll();
+    const canJoin = s.status === 'collecting' && s.count < s.total;
+    if (!canJoin || claimMode) return claimView(s, foot, canJoin);
+    joinView(s, foot);
+  }
+
+  function waitingView(s, me, foot) {
+    const set = s.settings;
+    const max = Math.max(0, s.total - 3);
+    if (exSet === null) exSet = new Set(me.excluded || []);
+    const sig = JSON.stringify({ c: s.count, t: s.total, n: s.names, st: s.status, se: s.settings });
+    if (sig !== lastPart) {
+      lastPart = sig;
+      const others = s.names.filter(n => n !== me.name);
+      const pick = max > 0 ? `<section class="card center">
+        <h2>Wen willst du diesmal nicht ziehen?</h2>
+        <p class="sub" style="margin-bottom:10px">Tippe auf Personen, die du <b>nicht</b> beschenken sollst – zum Beispiel, weil es schon letztes Mal so war. Das siehst nur du. Möglich bis zur Freigabe.</p>
+        ${others.length ? `<div class="chips" id="ex">${others.map(n => `<button type="button" class="chip${exSet.has(n) ? ' on' : ''}" data-n="${esc(n)}">${esc(n)}</button>`).join('')}</div>` : `<div class="chips"><span class="chip empty">Noch niemand sonst dabei</span></div>`}
+        <p class="hint" id="exinfo"></p>
+      </section>` : '';
+      app.innerHTML = `${brand}<section class="card center fade">
+          <p class="eyebrow">${esc(s.name)}</p>
+          <h1 style="font-size:clamp(28px,7vw,38px)">Danke, ${esc(me.name)}!</h1>
+          <p class="lead" style="margin-bottom:6px">Du bist im Topf. Sobald alle eingereicht haben und die Losung freigegeben ist, kannst du hier ziehen.</p>
+          ${ring(s.count, s.total)}
+          <p class="sub">eingereicht</p>
+          ${chips(s.names, s.total)}
+        </section>
+        ${pick}
+        <section class="card">
+          <h2>Das wird gelost</h2>
+          ${rulesHtml(set, s.total)}
+          <p class="hint box" style="margin-top:16px">🔑 Merk dir deine PIN. Wenn du das Gerät wechselst: Link öffnen → „Ich bin schon dabei“ → Name und PIN.</p>
+        </section>${foot}`;
+      const updInfo = () => {
+        const el = document.getElementById('exinfo'); if (!el) return;
+        el.textContent = exSet.size ? `${exSet.size} von höchstens ${max} abgewählt` : `Du kannst bis zu ${max} Personen abwählen.`;
+      };
+      updInfo();
+      app.querySelectorAll('#ex [data-n]').forEach(b => b.onclick = () => {
+        const n = b.dataset.n;
+        if (exSet.has(n)) exSet.delete(n);
+        else {
+          if (exSet.size >= max) return toast(`Du kannst höchstens ${max} Personen abwählen – sonst geht die Losung nicht auf.`);
+          exSet.add(n);
+        }
+        b.classList.toggle('on', exSet.has(n));
+        updInfo();
+        clearTimeout(exTimer);
+        exTimer = setTimeout(async () => {
+          try { await post('exclude', { id: PID, token: LS.get(tokKey(PID)), names: [...exSet] }); }
+          catch (e) { toast(e.message); exSet = null; lastPart = ''; participantView(); }
+        }, 500);
+      });
+    }
+    schedule(participantView);
+  }
+
+  function joinView(s, foot) {
+    const set = s.settings;
+    app.innerHTML = `${brand}<section class="card fade">
+      <p class="eyebrow">Du bist eingeladen</p>
+      <h1>${esc(s.name)}</h1>
+      <p class="lead">Trag dich ein${set.useColor || set.useLetter ? ' und wirf ' + [set.useColor && 'eine Farbe', set.useLetter && 'einen Buchstaben'].filter(Boolean).join(' und ') + ' in den Topf' : ''}. Später ziehst du, wen du beschenkst${set.useColor || set.useLetter ? ' – und was dabei zählt' : ''}.</p>
+      <form id="join" autocomplete="off">
+        <label>Dein Name<input name="name" maxlength="40" placeholder="Vorname" required></label>
+        ${set.useColor || set.useLetter ? `<div class="row">
+          ${set.useColor ? `<label class="color-field" style="flex:2">Eine Farbe<input name="color" maxlength="30" placeholder="z. B. Tannengrün" required><span class="dot"></span></label>` : ''}
+          ${set.useLetter ? `<label class="letter-input" style="flex:1">Buchstabe<input name="letter" maxlength="2" placeholder="A" required></label>` : ''}
+        </div>` : ''}
+        <label class="pin">Deine PIN (4 Ziffern)<input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required></label>
+        <p class="hint" style="margin:-6px 0 18px">🔑 Merk dir die PIN. Damit kommst du später auch mit einem anderen Handy oder Browser wieder rein.</p>
+        <button class="btn primary" type="submit">In den Topf werfen 🎁</button>
+        <p class="err"></p>
+      </form>
+      <p class="hint center">${s.count} von ${s.total} haben schon eingereicht</p>
+      ${s.count > 0 ? `<button class="linkbtn" id="toClaim">Ich bin schon dabei →</button>` : ''}
+    </section>${foot}`;
+    const f = document.getElementById('join');
+    if (f.color) {
+      const dot = f.querySelector('.dot');
+      f.color.oninput = () => { const c = colorCss(f.color.value); dot.style.background = c || 'transparent'; };
+    }
+    if (f.letter) f.letter.oninput = () => { const ch = [...f.letter.value.trim()].pop() || ''; f.letter.value = ch.toLocaleUpperCase('de-DE').slice(0, 1); };
+    f.pin.oninput = () => { f.pin.value = f.pin.value.replace(/\D/g, '').slice(0, 4); };
+    const tc = document.getElementById('toClaim');
+    if (tc) tc.onclick = () => { claimMode = true; claimView(s, foot, true); };
+    f.onsubmit = async e => {
+      e.preventDefault();
+      const btn = f.querySelector('button[type=submit]'); const err = f.querySelector('.err');
+      btn.disabled = true; err.textContent = '';
+      try {
+        if (f.color && /^(bunt\w*|mehrfarbig\w*|multi\s?colou?r\w*|regenbogen\w*|rainbow)$/i.test(f.color.value.trim())) { err.textContent = 'Bunt gilt nicht – bitte wähle eine einzelne Farbe.'; btn.disabled = false; return; }
+        const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value });
+        LS.set(tokKey(PID), d.token);
+        lastPart = ''; exSet = null; pushSynced = false; setManifest();
+        if (LS.get(admKey(PID))) { try { await status({ token: d.token, admin: LS.get(admKey(PID)) }); } catch {} location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
+        participantView();
+      } catch (ex) { err.textContent = ex.message; btn.disabled = false; }
+    };
+  }
+
+  // „Ich bin schon dabei“: Name antippen + PIN
+  function claimView(s, foot, canJoin) {
+    const lead = canJoin
+      ? 'Du hast dich schon eingetragen, bist aber auf einem neuen Gerät oder in einem anderen Browser? Wähle deinen Namen und gib deine PIN ein.'
+      : (s.status === 'open'
+          ? 'Die Losung läuft bereits, neue Teilnehmer sind nicht mehr möglich. Warst du schon dabei? Dann wähle deinen Namen und gib deine PIN ein – danach kannst du ziehen oder dein Los wieder ansehen.'
+          : 'Diese Feier ist schon voll. Warst du schon dabei? Dann wähle deinen Namen und gib deine PIN ein.');
+    app.innerHTML = `${brand}<section class="card fade">
+      <p class="eyebrow">${esc(s.name)}</p>
+      <h1 style="font-size:clamp(30px,7vw,40px)">Ich bin <em>schon dabei</em></h1>
+      <p class="lead">${esc(lead)}</p>
+      ${s.names.length ? `<p class="sub" style="margin-bottom:6px">Wer bist du?</p><div class="chips" id="who" style="justify-content:flex-start">${s.names.map(n => `<button type="button" class="chip" data-n="${esc(n)}">${esc(n)}</button>`).join('')}</div>` : `<p class="hint">Hier hat sich noch niemand eingetragen.</p>`}
+      <form id="claim" autocomplete="off" style="margin-top:18px">
+        <label class="pin">Deine PIN<input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required></label>
+        <button class="btn primary" type="submit" disabled>Weiter</button>
+        <p class="err"></p>
+      </form>
+      ${canJoin ? `<button class="linkbtn" id="toJoin">← Ich bin neu und möchte mitmachen</button>` : ''}
+    </section>${foot}`;
+    const f = document.getElementById('claim');
+    const btn = f.querySelector('button[type=submit]');
+    let who = '';
+    const upd = () => { btn.disabled = !(who && /^\d{4}$/.test(f.pin.value)); };
+    app.querySelectorAll('#who [data-n]').forEach(b => b.onclick = () => {
+      who = b.dataset.n;
+      app.querySelectorAll('#who [data-n]').forEach(x => x.classList.toggle('sel', x === b));
+      f.pin.focus(); upd();
+    });
+    f.pin.oninput = () => { f.pin.value = f.pin.value.replace(/\D/g, '').slice(0, 4); upd(); };
+    const tj = document.getElementById('toJoin');
+    if (tj) tj.onclick = () => { claimMode = false; joinView(s, foot); };
+    f.onsubmit = async e => {
+      e.preventDefault();
+      const err = f.querySelector('.err');
+      btn.disabled = true; err.textContent = '';
+      try {
+        const d = await post('claim', { id: PID, name: who, pin: f.pin.value });
+        LS.set(tokKey(PID), d.token);
+        claimMode = false; lastPart = ''; exSet = null; pushSynced = false; setManifest();
+        if (LS.get(admKey(PID))) { try { await status({ token: d.token, admin: LS.get(admKey(PID)) }); } catch {} location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
+        participantView();
+      } catch (ex) { err.textContent = ex.message; upd(); }
+    };
+  }
+
+  function drawView(s, me, foot) {
+    const set = s.settings;
+    const parts = [];
+    if (set.target) parts.push('wen du beschenkst');
+    if (set.useColor) parts.push('deine Farbe');
+    if (set.useLetter) parts.push('deinen Anfangsbuchstaben');
+    const what = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' und ' + parts.slice(-1) : (parts[0] || 'dein Los');
+    app.innerHTML = `${brand}<section class="card center fade">
+      <p class="eyebrow">${esc(s.name)}</p>
+      <span class="gift">🎁</span>
+      <h1 style="font-size:clamp(30px,7vw,40px)">Die Losung ist <em>offen</em></h1>
+      <p class="lead">${esc(me.name)}, zieh jetzt ${what}. Was du ziehst, kann niemand anderes mehr bekommen.</p>
+      <button class="btn gold" id="draw">✦ Jetzt ziehen</button>
+      <p class="err"></p>
+    </section>${foot}`;
+    const btn = document.getElementById('draw');
+    btn.onclick = async () => {
+      btn.disabled = true;
+      const shuffle = startShuffle(s, me, foot);
+      try {
+        const [d] = await Promise.all([post('draw', { id: PID, token: LS.get(tokKey(PID)) }), sleep(2200)]);
+        shuffle.stop();
+        resultView(s, { ...me, draw: d.draw }, foot, true);
+      } catch (e) {
+        shuffle.stop();
+        if (e.status === 409) { await sleep(1500); return participantView(); }
+        drawView(s, me, foot);
+        app.querySelector('.err').textContent = e.message;
+      }
+    };
+  }
+
+  function startShuffle(s, me, foot) {
+    const set = s.settings;
+    const cnames = ['Rot','Gold','Tannengrün','Silber','Blau','Weiß','Bordeaux','Rosa','Kupfer','Türkis','Lila','Orange'];
+    const letters = 'ABCDEFGHIKLMNOPRSTUW';
+    const people = s.names.filter(n => n !== me.name);
+    const tiles = (set.useColor ? 1 : 0) + (set.useLetter ? 1 : 0);
+    app.innerHTML = `${brand}<section class="card center">
+      <p class="eyebrow">${esc(s.name)}</p>
+      <h2>Es wird gezogen …</h2>
+      ${set.target ? `<div class="who shuffling"><span class="lbl">Du beschenkst</span><div class="nm" id="tn">…</div></div>` : ''}
+      ${tiles ? `<div class="reveal shuffling ${tiles === 1 ? 'single' : ''}">
+        ${set.useColor ? `<div class="tile"><span class="lbl">Farbe</span><div class="swatch" id="sw"></div><div class="cname" id="cn"></div></div>` : ''}
+        ${set.useLetter ? `<div class="tile"><span class="lbl">Buchstabe</span><div class="bigletter" id="bl">A</div></div>` : ''}
+      </div>` : ''}
+    </section>${foot}`;
+    const sw = document.getElementById('sw'), cn = document.getElementById('cn'), bl = document.getElementById('bl'), tn = document.getElementById('tn');
+    let i = 0;
+    const t = setInterval(() => {
+      if (sw) { const n = cnames[i % cnames.length]; sw.style.background = colorCss(n); cn.textContent = n; }
+      if (bl) bl.textContent = letters[Math.floor(Math.random() * letters.length)];
+      if (tn && people.length) tn.textContent = people[Math.floor(Math.random() * people.length)];
+      i++;
+    }, 90);
+    return { stop: () => clearInterval(t) };
+  }
+
+  let jokerTimer = null;
+  function jokerHelp(set) {
+    clearInterval(jokerTimer);
+    const FC = ['Rot', 'Gold', 'Tannengrün', 'Silber', 'Blau', 'Weiß', 'Bordeaux', 'Rosa', 'Kupfer', 'Türkis', 'Lila', 'Orange'];
+    const FL = 'ABCDEFGHIKLMNOPRSTUW';
+    const step = () => {
+      const jc = document.getElementById('jc'), jl = document.getElementById('jl'), jt = document.getElementById('jt');
+      if (!jc && !jl && !jt) { clearInterval(jokerTimer); return; }
+      const col = FC[Math.floor(Math.random() * FC.length)], ltr = FL[Math.floor(Math.random() * FL.length)];
+      if (jc) { jc.style.background = colorCss(col) || 'transparent'; document.getElementById('jn').textContent = col; }
+      if (jl) jl.textContent = ltr;
+      if (jt) jt.textContent = example(ltr, set.useColor ? col : '', 'j' + Math.random());
+    };
+    step();
+    jokerTimer = setInterval(step, 8000);
+  }
+  const isDone = (s) => s.status === 'open' && s.count > 0 && s.drawnCount >= s.count;
+  const doneBanner = () => `<div class="alldone"><span class="ic">🎉</span><div><b>Alle haben gezogen!</b><small>Jetzt kann geschenkt werden – viel Freude dabei.</small></div></div>`;
+  let doneTimer;
+  function watchDone() {
+    clearTimeout(doneTimer);
+    const tick = async () => {
+      const box = document.getElementById('alldone');
+      if (!box) return;
+      try {
+        const s = await status({ token: LS.get(tokKey(PID)) });
+        if (isDone(s)) { box.innerHTML = doneBanner(); return; }
+      } catch (e) { if (e.status === 410) return errorView(e.message); }
+      doneTimer = setTimeout(tick, 8000);
+    };
+    doneTimer = setTimeout(tick, 8000);
+  }
+  function resultView(s, me, foot, fresh) {
+    clearInterval(jokerTimer);
+    clearTimeout(doneTimer);
+    const d = me.draw;
+    const { color, letter, target, joker, loser } = d;
+    const set = s.settings;
+    const known = colorCss(color);
+    const others = Math.max(0, s.total - 1);
+    const tiles = !joker && ((color ? 1 : 0) + (letter ? 1 : 0));
+    const exText = !joker && letter ? example(letter, color, me.name) : '';
+    app.innerHTML = `${brand}<section class="card center ${fresh ? 'revealed' : 'fade'}">
+      <p class="eyebrow">${esc(s.name)} · ${esc(me.name)}</p>
+      <h2>Dein Los</h2>
+      ${target ? `<div class="who"><span class="lbl">Du beschenkst</span><div class="nm">${esc(target)}</div><span class="em">🎁</span></div>` : ''}
+      ${joker ? `<div class="banner joker big"><span class="ic">🃏</span><div><b>Du hast den Joker!</b><p>${target ? `Du suchst das Geschenk für ${esc(target)} aus – ganz frei: ohne Farbe, ohne Buchstabe, ohne Regeln.` : 'Du suchst dir dein Geschenk ganz frei aus – ohne Farbe, ohne Buchstabe, ohne Regeln.'} Verrate es aber niemandem, bis ihr schenkt.</p></div></div>
+      ${(set.useColor || set.useLetter) ? `<div class="example jhelp"><p class="t">🎰 Zu viel Freiheit?</p><p class="sub" style="margin:0">Falls dir die Entscheidung zu schwer fällt: ein paar völlig unverbindliche Vorschläge. Sie wechseln so lange, bis du glücklich bist.</p><div class="slots">${set.useColor ? `<div class="slot"><span class="lbl">Farbe</span><div class="swatch mini" id="jc"></div><div class="cname mini" id="jn"></div></div>` : ''}${set.useLetter ? `<div class="slot"><span class="lbl">Buchstabe</span><div class="bigletter mini" id="jl">?</div></div>` : ''}</div>${set.useLetter ? `<p class="ex" id="jt" style="margin:12px 0 0"></p>` : ''}</div>` : ''}` : ''}
+      ${tiles ? `<div class="reveal ${fresh ? 'revealed' : ''} ${tiles === 1 ? 'single' : ''}">
+        ${color ? `<div class="tile"><span class="lbl">Farbe</span><div class="swatch ${known ? '' : 'unknown'}" ${swatchStyle(color)}></div><div class="cname">${esc(color)}</div></div>` : ''}
+        ${letter ? `<div class="tile"><span class="lbl">Buchstabe</span><div class="bigletter">${esc(letter)}</div></div>` : ''}
+      </div>` : ''}
+      ${exText ? `<div class="example"><p class="t">💡 Geschenktipp</p><p class="ex" style="margin:0">${esc(exText)}</p></div>` : ''}
+      ${loser ? `<div class="banner angel"><span class="ic">😇</span><div><b>Du bist der Engel!</b><p>Herzlichen Glückwunsch – ausgerechnet dich hat der Himmel erwählt. Zusätzlich zu deinem Geschenk bringst du für alle anderen (${others} ${others === 1 ? 'Person' : 'Personen'}) je eine Kleinigkeit mit, höchstens 1–2 € pro Person. Gute Taten sind eben dein Ding … und den Heiligenschein behältst du dabei natürlich auf. ✨</p></div></div>` : ''}
+      ${set.budget ? `<div class="budget"><span>💶</span><div><b>Budget: bis ${set.budget} €</b><small>pro Geschenk – zur Orientierung</small></div></div>` : ''}
+      <div id="alldone">${isDone(s) ? doneBanner() : ''}</div>
+      <p class="hint">Psst – nicht verraten! Auf einem anderen Gerät: Link öffnen → „Ich bin schon dabei“ → Name und PIN, dann siehst du dein Los wieder.</p>
+    </section>${foot}`;
+    if (joker) jokerHelp(set);
+    if (!isDone(s)) watchDone();
+    if (fresh) {
+      burst();
+      if (joker || loser) setTimeout(() => fx(loser ? 'angel' : 'joker'), 2600);
+    }
+  }
+
+  /* ---------- Vollbild-Animation (Joker / Engel) ---------- */
+  function fx(kind) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const old = document.getElementById('fx'); if (old) old.remove();
+    const A = kind === 'angel';
+    const em = A ? ['🪶', '✨', '☁️', '😇', '⭐', '🕊️', '🌟'] : ['🃏', '🎉', '✨', '🎊', '♠️', '♥️', '♦️', '♣️', '🎲', '🌈'];
+    let ps = '';
+    for (let i = 0; i < 48; i++) {
+      ps += `<i class="p" style="--x:${(Math.random() * 100).toFixed(1)}vw;--s:${(18 + Math.random() * 34).toFixed(0)}px;--d:${(2.6 + Math.random() * 2.2).toFixed(2)}s;--l:${(Math.random() * 1.6).toFixed(2)}s;--dx:${((Math.random() - .5) * 30).toFixed(1)}vw;--r:${((Math.random() - .5) * 720).toFixed(0)}deg">${em[i % em.length]}</i>`;
+    }
+    const el = document.createElement('div');
+    el.id = 'fx'; el.className = kind;
+    el.innerHTML = `<div class="rays"></div>${ps}<div class="big ${A ? '' : 'flip'}">${A ? '😇' : '🃏'}</div><div class="ttl">${A ? 'Du bist der Engel!' : 'JOKER!'}</div><div class="sb">${A ? 'Himmlisch – und zwar für alle anderen.' : 'Du darfst dir dein Geschenk frei aussuchen!'}</div>`;
+    document.body.appendChild(el);
+    let done = false;
+    const end = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => el.remove(), 650); };
+    el.onclick = end; setTimeout(end, 5000);
+  }
+
+  /* ---------- Benachrichtigungen ---------- */
+  const PUSH_OK = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  const b64uToU8 = t => { const b = atob((t + '='.repeat((4 - t.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(b, c => c.charCodeAt(0)); };
+  let pushSynced = false;
+  async function pushSync() {
+    if (pushSynced || !PUSH_OK || !PID || Notification.permission !== 'granted') return;
+    const token = LS.get(tokKey(PID)); if (!token) return;
+    pushSynced = true;
+    try {
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) { const { key } = await api('push'); sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToU8(key) }); }
+      const sig = token + '|' + sub.endpoint;
+      if (LS.get('wichtel:ps:' + PID) === sig) return;
+      await post('push', { action: 'subscribe', id: PID, token, sub: sub.toJSON() });
+      LS.set('wichtel:ps:' + PID, sig);
+    } catch { pushSynced = false; }
+  }
+  function sheet(html) {
+    const old = document.getElementById('pushsheet'); if (old) old.remove();
+    const el = document.createElement('div'); el.id = 'pushsheet'; el.className = 'sheet'; el.innerHTML = html;
+    document.body.appendChild(el); return el;
+  }
+  // Bei jedem Besuch: fragen, solange nicht erlaubt
+  function pushPrompt() {
+    if (!PUSH_OK) return;
+    if (Notification.permission === 'granted') { pushSync(); return; }
+    setTimeout(() => {
+      if (Notification.permission === 'denied') {
+        const el = sheet(`<span class="ic">🔕</span><div class="tx"><b>Benachrichtigungen sind blockiert</b><p>So verpasst du, wenn die Losung startet. Du kannst sie in den Browser-Einstellungen (Schloss-Symbol neben der Adresse) wieder erlauben.</p></div><div class="acts"><button class="btn small" id="pok">Verstanden</button></div>`);
+        el.querySelector('#pok').onclick = () => el.remove();
+        return;
+      }
+      const el = sheet(`<span class="ic">🔔</span><div class="tx"><b>Benachrichtigungen erlauben?</b><p>Wir sagen dir Bescheid, sobald die Losung startet – und erinnern dich, falls du noch nicht gezogen hast.</p></div><div class="acts"><button class="btn small" id="pno">Nein</button><button class="btn small primary" id="pyes">Ja, gern</button></div>`);
+      el.querySelector('#pno').onclick = () => el.remove();
+      el.querySelector('#pyes').onclick = async () => {
+        el.remove();
+        let r = 'default';
+        try { r = await Notification.requestPermission(); } catch {}
+        if (r === 'granted') { toast('Benachrichtigungen sind an 🔔'); pushSync(); }
+      };
+    }, 1200);
+  }
+
+  /* ---------- App-Manifest & Startbildschirm-Hinweis ---------- */
+  function setManifest() {
+    if (!PID) return;
+    const u = new URLSearchParams({ p: PID });
+    if (ADMIN) u.set('admin', ADMIN);
+    else { const t = LS.get(tokKey(PID)); if (t) u.set('t', t); }
+    document.getElementById('mf').href = '/api/manifest?' + u;
+  }
+  const STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const ANDROID = /android/i.test(navigator.userAgent);
+  let deferredInstall = null;
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; renderInst(); });
+  addEventListener('appinstalled', () => { deferredInstall = null; renderInst(); });
+  const SHARE_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8c27a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>';
+  const PLUS_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8c27a" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+  function renderInst() {
+    const el = document.getElementById('inst');
+    const dis = Number(LS.get('wichtel:inst') || 0);
+    if (STANDALONE || !(IOS || ANDROID) || (dis && Date.now() - dis < 3 * 864e5)) { el.innerHTML = ''; return; }
+    el.innerHTML = `<div><span class="ic">📲</span><div class="tx"><b>Auf dem Startbildschirm läuft es besser</b><p>Als App bleibt dein Los griffbereit – und Benachrichtigungen funktionieren zuverlässig.</p></div><div class="acts"><button class="btn small primary" id="instgo">${IOS ? 'So geht’s' : 'Installieren'}</button><button class="x" id="instx" aria-label="Hinweis schließen">✕</button></div></div>`;
+    document.getElementById('instx').onclick = () => { LS.set('wichtel:inst', String(Date.now())); renderInst(); };
+    document.getElementById('instgo').onclick = async () => {
+      if (!IOS && deferredInstall) {
+        deferredInstall.prompt();
+        try { await deferredInstall.userChoice; } catch {}
+        deferredInstall = null; renderInst();
+        return;
+      }
+      installSteps();
+    };
+  }
+  function installSteps() {
+    const steps = IOS
+      ? [`Tippe in der Leiste auf das Teilen-Symbol ${SHARE_SVG} (bei manchen Browsern oben rechts).`,
+         `Scrolle etwas nach unten und wähle <b>„Zum Home-Bildschirm“</b> ${PLUS_SVG}.`,
+         `Tippe oben rechts auf <b>„Hinzufügen“</b>.`,
+         `Öffne Wichteln jetzt über das neue Icon und erlaube dort die <b>Benachrichtigungen</b>.`]
+      : [`Tippe oben rechts im Browser auf das Menü <b>⋮</b>.`,
+         `Wähle <b>„App installieren“</b> oder <b>„Zum Startbildschirm hinzufügen“</b>.`,
+         `Bestätige mit <b>„Installieren“</b>.`,
+         `Öffne Wichteln über das neue Icon und erlaube die <b>Benachrichtigungen</b>.`];
+    const m = document.createElement('div');
+    m.className = 'modal';
+    m.innerHTML = `<div class="box"><p class="eyebrow">Wichteln als App</p><h2>Zum Startbildschirm hinzufügen</h2><ol class="isteps">${steps.map(x => `<li><span>${x}</span></li>`).join('')}</ol><button class="btn primary" id="mok">Verstanden</button></div>`;
+    document.body.appendChild(m);
+    const close = () => m.remove();
+    m.querySelector('#mok').onclick = close;
+    m.onclick = e => { if (e.target === m) close(); };
+  }
+
+  /* ---------- Schnee ---------- */
+  const cv = document.getElementById('snow'), ctx = cv.getContext('2d');
+  let W, H, flakes = [], extra = [];
+  const DPR = Math.min(2, window.devicePixelRatio || 1);
+  function resize() {
+    W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const n = Math.round(Math.min(110, W * H / 12000));
+    flakes = Array.from({ length: n }, () => mk(Math.random() * H));
+  }
+  const mk = y => ({ x: Math.random() * W, y, r: Math.random() * 2.2 + .6, s: Math.random() * .5 + .25, d: Math.random() * Math.PI * 2, o: Math.random() * .5 + .25 });
+  function burst() {
+    const cols = ['#e8c27a', '#d6473a', '#f6efe2', '#2f9e55'];
+    for (let i = 0; i < 120; i++) {
+      const a = Math.random() * Math.PI * 2, v = Math.random() * 7 + 3;
+      extra.push({ x: W / 2, y: H * .4, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 4, life: 1, c: cols[i % 4], r: Math.random() * 3 + 2, rot: Math.random() * 6 });
+    }
+  }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    for (const f of flakes) {
+      f.y += f.s; f.d += .01; f.x += Math.sin(f.d) * .3;
+      if (f.y > H + 5) Object.assign(f, mk(-5));
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,255,${f.o})`; ctx.fill();
+    }
+    extra = extra.filter(p => p.life > 0);
+    for (const p of extra) {
+      p.x += p.vx; p.y += p.vy; p.vy += .18; p.vx *= .99; p.life -= .008; p.rot += .1;
+      ctx.save(); ctx.globalAlpha = Math.max(0, p.life); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  }
+  addEventListener('resize', resize); resize();
+  if (!reduce) tick();
+
+  /* ---------- Start ---------- */
+  setManifest();
+  renderInst();
+  if (!PID) document.getElementById('newparty').style.display = 'none';
+  if (!PID) homeView();
+  else if (ADMIN) adminView();
+  else if (LS.get(admKey(PID)) && !qs.get('me')) location.replace(adminLinkFor(PID, LS.get(admKey(PID))));
+  else participantView();
+  pushPrompt();
+})();
+</script>
+</body>
+</html>
