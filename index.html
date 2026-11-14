@@ -317,7 +317,8 @@
   }
   function errorView(msg) {
     stopPoll();
-    app.innerHTML = `${brand}<section class="card center fade"><span class="gift">🎄</span><h2>Hoppla</h2><p class="lead">${esc(msg)}</p><a class="btn" href="/">Neue Feier erstellen</a></section>`;
+    const gone = /gelöscht/.test(msg);
+    app.innerHTML = `${brand}<section class="card center fade"><span class="gift">🎄</span><h2>${gone ? 'Event gelöscht' : 'Hoppla'}</h2><p class="lead">${esc(msg)}</p><a class="btn" href="/">Neue Feier erstellen</a></section>`;
   }
 
   /* ---------- Einstellungen ---------- */
@@ -496,7 +497,7 @@
     LS.set(admKey(PID), ADMIN);
     let s;
     try { s = await status({ admin: ADMIN }); }
-    catch (e) { if (!app.querySelector('.card')) return errorView(e.message); schedule(adminView, 8000); return; }
+    catch (e) { if (e.status === 410 || !app.querySelector('.card')) return errorView(e.message); schedule(adminView, 8000); return; }
     if (!s.isAdmin) return errorView('Dieser Verwaltungs-Link ist ungültig.');
 
     const sig = JSON.stringify(s);
@@ -624,7 +625,7 @@
     const token = LS.get(tokKey(PID));
     let s;
     try { s = await status({ ...(token ? { token } : {}), ...(LS.get(admKey(PID)) ? { admin: LS.get(admKey(PID)) } : {}) }); }
-    catch (e) { if (!app.querySelector('.card')) return errorView(e.message); schedule(participantView, 8000); return; }
+    catch (e) { if (e.status === 410 || !app.querySelector('.card')) return errorView(e.message); schedule(participantView, 8000); return; }
 
     if (token && !s.me) LS.del(tokKey(PID));
     const me = s.me;
