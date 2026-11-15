@@ -29,9 +29,9 @@ export default function handler(req, res) {
     background_color: '#0b1f19',
     theme_color: '#0b1f19',
     icons: [
-      { src: '/api/icon?s=192', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/api/icon?s=512', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: '/api/icon?s=512', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      { src: '/api/icon?s=192&v=2', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/api/icon?s=512&v=2', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/api/icon?s=512&v=2', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
   }));
 }
