@@ -489,11 +489,6 @@
         ${mine.map(e => `<div class="rrow"><span>${esc(e.n || 'Event ' + e.p)}</span><a class="btn small" href="/?p=${esc(e.p)}">Öffnen</a></div>`).join('')}
       </section>` : ''}
       <section class="card fade">
-        <p class="eyebrow">Event-Link einfügen</p>
-        <p class="hint" style="margin:0 0 12px">Du hast einen Einladungslink bekommen? Kopiere ihn und füge ihn hier ein – dann ist das Event dauerhaft in dieser App.</p>
-        <form id="paste" autocomplete="off"><input name="link" inputmode="url" placeholder="Link hier einfügen" aria-label="Event-Link"><button class="btn small" type="submit" style="margin-top:10px">Event öffnen</button><p class="err"></p></form>
-      </section>
-      <section class="card fade">
         <p class="eyebrow">Weihnachts-Wichteln</p>
         <h1>Wer schenkt<br><em>wem?</em></h1>
         <p class="lead">Leg eine Feier an und teil den Link. Alle tragen sich mit Namen und PIN ein – danach wird gelost, wen man beschenkt. Auf Wunsch mit Farbe, Buchstabe, Joker und Engel.</p>
@@ -510,6 +505,11 @@
           <button class="btn primary" type="submit">Feier erstellen</button>
           <p class="err"></p>
         </form>
+      </section>
+      <section class="card fade">
+        <p class="eyebrow">Event-Link einfügen</p>
+        <p class="hint" style="margin:0 0 12px">Du hast einen Einladungslink bekommen? Kopiere ihn und füge ihn hier ein – dann ist das Event dauerhaft in dieser App.</p>
+        <form id="paste" autocomplete="off"><input name="link" inputmode="url" placeholder="Link hier einfügen" aria-label="Event-Link"><button class="btn small" type="submit" style="margin-top:10px">Event öffnen</button><p class="err"></p></form>
       </section>
       <ol class="steps"><li><b>1</b>Feier anlegen</li><li><b>2</b>Link teilen</li><li><b>3</b>Losung starten</li></ol>
 `;
