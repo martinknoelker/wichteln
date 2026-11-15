@@ -11,10 +11,13 @@ export default function handler(req, res) {
     if (admin) u.set('admin', admin); else if (t) u.set('t', t);
     start = '/?' + u.toString();
   }
+  const id = start; // Identität der App bleibt wie bisher
+  // a=1: Start über das Icon – die App öffnet dann das zuletzt genutzte Event
+  start += start.includes('?') ? '&a=1' : '?a=1';
   res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
   res.status(200).end(JSON.stringify({
-    id: start,
+    id,
     name: 'Wichteln – Weihnachtslosung',
     short_name: 'Wichteln',
     description: 'Weihnachts-Wichteln: losen, wer wen beschenkt.',
