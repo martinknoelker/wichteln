@@ -181,6 +181,10 @@
   @keyframes sheetin{from{opacity:0;transform:translateX(-50%) translateY(30px)}}
   .rrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);text-align:left}
   .rrow:first-of-type{border-top:0}
+  .evact{display:flex;align-items:center;gap:2px}
+  .evx{background:none;border:0;color:var(--muted);font:inherit;font-size:20px;line-height:1;padding:6px 10px;opacity:.55;cursor:pointer;border-radius:8px}
+  .evx:hover{opacity:1}
+  .evx.arm{color:#ff9d92;font-size:13px;opacity:1}
   #fx{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;opacity:0;animation:fxin .5s ease forwards;cursor:pointer;text-align:center;padding:24px}
   #fx.out{animation:fxout .6s ease forwards}
   @keyframes fxin{to{opacity:1}}
@@ -486,7 +490,7 @@
     app.innerHTML = `${brand}
       ${mine.length ? `<section class="card fade">
         <p class="eyebrow">Meine Events</p>
-        ${mine.map(e => `<div class="rrow"><span>${esc(e.n || 'Event ' + e.p)}</span><a class="btn small" href="/?p=${esc(e.p)}">Öffnen</a></div>`).join('')}
+        ${mine.map(e => `<div class="rrow"><span>${esc(e.n || 'Event ' + e.p)}</span><span class="evact"><a class="btn small" href="/?p=${esc(e.p)}">Öffnen</a><button type="button" class="evx" data-rm="${esc(e.p)}" title="Aus der Liste entfernen" aria-label="Aus der Liste entfernen">×</button></span></div>`).join('')}
       </section>` : ''}
       <section class="card fade">
         <p class="eyebrow">Weihnachts-Wichteln</p>
@@ -513,6 +517,17 @@
       </section>
       <ol class="steps"><li><b>1</b>Feier anlegen</li><li><b>2</b>Link teilen</li><li><b>3</b>Losung starten</li></ol>
 `;
+    app.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
+      if (!b.classList.contains('arm')) {
+        b.classList.add('arm'); b.textContent = 'Entfernen?';
+        setTimeout(() => { if (b.isConnected) { b.classList.remove('arm'); b.textContent = '×'; } }, 3000);
+        return;
+      }
+      forget(b.dataset.rm);
+      const row = b.closest('.rrow'), sec = row.parentElement;
+      row.remove();
+      if (!sec.querySelector('.rrow')) sec.remove();
+    });
     const pf = document.getElementById('paste');
     pf.onsubmit = e => {
       e.preventDefault();
