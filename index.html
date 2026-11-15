@@ -261,6 +261,31 @@
   // Persönlicher Link (?t=…) stellt die Teilnahme in diesem Browser wieder her
   if (PID && qs.get('t')) { try { localStorage.setItem('wichtel:tok:' + PID, qs.get('t')); } catch {} history.replaceState(null, '', '/?p=' + PID + (qs.get('me') ? '&me=1' : '')); }
 
+  // Zuletzt genutztes Event merken: Beim Start über das Home-Bildschirm-Icon (a=1) öffnet sich dieses Event
+  const LASTK = 'wichteln:last', EVK = 'wichteln:events';
+  const PIDRE = /^[a-z0-9]{4,16}$/;
+  const evList = () => { try { const a = JSON.parse(LS.get(EVK) || '[]'); return Array.isArray(a) ? a.filter(e => e && PIDRE.test(e.p)) : []; } catch { return []; } };
+  const known = id => !!(LS.get(tokKey(id)) || LS.get(admKey(id)));
+  function remember(id, name, last = true) {
+    if (!id || !PIDRE.test(id)) return;
+    const old = evList().find(e => e.p === id);
+    const l = evList().filter(e => e.p !== id);
+    l.unshift({ p: id, n: String(name || (old && old.n) || '').slice(0, 60) });
+    LS.set(EVK, JSON.stringify(l.slice(0, 20)));
+    if (last) LS.set(LASTK, id);
+  }
+  function forget(id) {
+    const l = evList().filter(e => e.p !== id);
+    LS.set(EVK, JSON.stringify(l));
+    if (LS.get(LASTK) === id) { if (l.length) LS.set(LASTK, l[0].p); else LS.del(LASTK); }
+  }
+  if (qs.get('a') === '1') {
+    const last = LS.get(LASTK);
+    if (PID && known(PID) && PID !== last) remember(PID, '', false);
+    if (last && last !== PID && PIDRE.test(last) && known(last)) { location.replace('/?p=' + last); return; }
+    if (!PID && !last) history.replaceState(null, '', '/');
+  }
+
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -284,7 +309,10 @@
   async function api(path, opts) {
     const r = await fetch('/api/' + path, opts);
     const d = await r.json().catch(() => ({ error: 'Der Server hat unerwartet geantwortet.' }));
-    if (!r.ok) throw Object.assign(new Error(d.error || 'Etwas ist schiefgelaufen.'), { status: r.status });
+    if (!r.ok) {
+      if ((r.status === 404 || r.status === 410) && PID && path.startsWith('status')) forget(PID);
+      throw Object.assign(new Error(d.error || 'Etwas ist schiefgelaufen.'), { status: r.status });
+    }
     return d;
   }
   const post = (p, b) => api(p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
@@ -454,7 +482,17 @@
   function homeView() {
     stopPoll();
     document.title = 'Wichteln ✦ Weihnachtslosung';
+    const mine = evList();
     app.innerHTML = `${brand}
+      ${mine.length ? `<section class="card fade">
+        <p class="eyebrow">Meine Events</p>
+        ${mine.map(e => `<div class="rrow"><span>${esc(e.n || 'Event ' + e.p)}</span><a class="btn small" href="/?p=${esc(e.p)}">Öffnen</a></div>`).join('')}
+      </section>` : ''}
+      <section class="card fade">
+        <p class="eyebrow">Event-Link einfügen</p>
+        <p class="hint" style="margin:0 0 12px">Du hast einen Einladungslink bekommen? Kopiere ihn und füge ihn hier ein – dann ist das Event dauerhaft in dieser App.</p>
+        <form id="paste" autocomplete="off"><input name="link" inputmode="url" placeholder="Link hier einfügen" aria-label="Event-Link"><button class="btn small" type="submit" style="margin-top:10px">Event öffnen</button><p class="err"></p></form>
+      </section>
       <section class="card fade">
         <p class="eyebrow">Weihnachts-Wichteln</p>
         <h1>Wer schenkt<br><em>wem?</em></h1>
@@ -475,6 +513,17 @@
       </section>
       <ol class="steps"><li><b>1</b>Feier anlegen</li><li><b>2</b>Link teilen</li><li><b>3</b>Losung starten</li></ol>
 `;
+    const pf = document.getElementById('paste');
+    pf.onsubmit = e => {
+      e.preventDefault();
+      const er = pf.querySelector('.err'); er.textContent = '';
+      let u; try { u = new URL(pf.link.value.trim(), location.origin); } catch { er.textContent = 'Das ist kein gültiger Link.'; return; }
+      const id = u.searchParams.get('p');
+      if (!PIDRE.test(id || '')) { er.textContent = 'In diesem Link steckt kein Event. Bitte den ganzen Einladungslink einfügen.'; return; }
+      const o = new URLSearchParams({ p: id });
+      for (const k of ['t', 'admin']) if (u.searchParams.get(k)) o.set(k, u.searchParams.get(k));
+      location.href = '/?' + o;
+    };
     const f = document.getElementById('create');
     const totalInput = f.total;
     f.querySelectorAll('[data-d]').forEach(b => b.onclick = () => {
@@ -502,6 +551,7 @@
     try { s = await status({ admin: ADMIN }); }
     catch (e) { if (e.status === 410 || !app.querySelector('.card')) return errorView(e.message); schedule(adminView, 8000); return; }
     if (!s.isAdmin) return errorView('Dieser Verwaltungs-Link ist ungültig.');
+    remember(PID, s.name);
 
     const sig = JSON.stringify(s);
     if (sig !== lastAdmin) {
@@ -638,6 +688,7 @@
     const adminLink = LS.get(admKey(PID));
     const foot = `<p class="foot">${adminLink ? `<a href="/?p=${esc(PID)}&admin=${esc(adminLink)}">Zur Verwaltung</a>` : ''}</p>`;
     document.title = s.name + ' · Wichteln';
+    if (me) remember(PID, s.name);
     s.settings = { ...DEFAULTS, target: false, ...s.settings };
 
     // Ergebnis schon vorhanden
