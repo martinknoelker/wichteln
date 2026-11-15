@@ -526,7 +526,7 @@
         settingsCard = `<section class="card">
           <h2>Einstellungen</h2>
           <p class="hint" style="margin:0 0 14px">Änderungen wirken sofort und gelten für alle. ${locked.length ? 'Farbe und Buchstabe sind gesperrt, weil schon jemand eingereicht hat.' : ''}</p>
-          <div class="always"><span class="oi">🎁</span><span><b>Wer beschenkt wen</b>Immer dabei. Alle können vor der Losung geheim Personen abwählen.</span></div>
+          <div class="always"><span class="oi">🎁</span><span><b>Wer beschenkt wen</b>Immer dabei. Wer wen nicht ziehen darf, legst nur du fest (unten) – die Teilnehmer können nichts abwählen.</span></div>
           ${switchesHtml(set, locked)}
           <label style="margin-top:16px">💶 Budget pro Geschenk in € <small style="color:var(--muted)">(leer = keins)</small>
             <input id="budget" type="number" min="1" max="10000" inputmode="numeric" placeholder="z. B. 15" value="${set.budget || ''}"></label>
@@ -664,12 +664,7 @@
     if (sig !== lastPart) {
       lastPart = sig;
       const others = s.names.filter(n => n !== me.name);
-      const pick = max > 0 ? `<section class="card center">
-        <h2>Wen willst du diesmal nicht ziehen?</h2>
-        <p class="sub" style="margin-bottom:10px">Tippe auf Personen, die du <b>nicht</b> beschenken sollst – zum Beispiel, weil es schon letztes Mal so war. Das siehst nur du. Möglich bis zur Freigabe.</p>
-        ${others.length ? `<div class="chips" id="ex">${others.map(n => `<button type="button" class="chip${exSet.has(n) ? ' on' : ''}" data-n="${esc(n)}">${esc(n)}</button>`).join('')}</div>` : `<div class="chips"><span class="chip empty">Noch niemand sonst dabei</span></div>`}
-        <p class="hint" id="exinfo"></p>
-      </section>` : '';
+      const pick = '';
       app.innerHTML = `${brand}<section class="card center fade">
           <p class="eyebrow">${esc(s.name)}</p>
           <h1 style="font-size:clamp(28px,7vw,38px)">Danke, ${esc(me.name)}!</h1>
