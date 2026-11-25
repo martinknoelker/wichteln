@@ -1,12 +1,22 @@
-import { redis, pipeline, k, TTL, handle, fail, body, getMeta } from '../lib/redis.js';
+import { redis, pipeline, k, TTL, handle, fail, body, getMeta, nameKey } from '../lib/redis.js';
+import { parse, tokenByName } from '../lib/kids.js';
 
 export default handle(async (req, res) => {
   if (req.method !== 'POST') fail(405, 'Nur POST erlaubt');
   const b = body(req);
   const id = String(b.id || '');
-  const token = String(b.token || '') || '-';
+  let token = String(b.token || '') || '-';
   const meta = await getMeta(id);
   if (meta.status !== 'open') fail(409, 'Die Losung ist noch nicht freigegeben.');
+
+  // Für ein Kind ziehen: nur ein eingetragener Elternteil – das Los des Kindes gibt es nur einmal (für beide Eltern gleich)
+  if (b.kid) {
+    if (!(await redis('HEXISTS', k(id, 'p'), token))) fail(403, 'Du bist bei dieser Feier nicht angemeldet.');
+    const kt = await tokenByName(id, nameKey(b.kid));
+    const kp = kt && parse(await redis('HGET', k(id, 'p'), kt));
+    if (!kp || !kp.kid || !Array.isArray(kp.par) || !kp.par.includes(token)) fail(403, 'Du verwaltest dieses Kind nicht.');
+    token = kt;
+  }
 
   const [mine, existing, assigned] = await pipeline([
     ['HGET', k(id, 'p'), token],
