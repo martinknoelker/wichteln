@@ -1,4 +1,5 @@
 import { redis, pipeline, k, rid, TTL, handle, fail, body, clean, getMeta, settingsOf, nameKey, hashPin } from '../lib/redis.js';
+import { KID_MAX, personFrom, createKids, claimKids } from '../lib/kids.js';
 
 export default handle(async (req, res) => {
   if (req.method !== 'POST') fail(405, 'Nur POST erlaubt');
@@ -28,10 +29,16 @@ export default handle(async (req, res) => {
   }
   person.pin = hashPin(id, nk, pin);
 
-  // Platz atomar reservieren, damit nie mehr als „total" Personen teilnehmen
-  const n = await redis('INCR', k(id, 'count'));
+  // Kinder, die mit angemeldet werden, und Kinder, bei denen man ebenfalls Elternteil ist
+  const kidList = (Array.isArray(b.kids) ? b.kids : []).slice(0, KID_MAX).map((x) => personFrom(x, s));
+  const parentOf = (Array.isArray(b.parentOf) ? b.parentOf : []).slice(0, KID_MAX).map(String);
+  const need = 1 + kidList.length;
+
+  // Plätze atomar reservieren, damit nie mehr als „total" Personen teilnehmen
+  const n = await redis('INCRBY', k(id, 'count'), need);
   if (n > meta.total) {
-    await redis('DECR', k(id, 'count'));
+    await redis('DECRBY', k(id, 'count'), need);
+    if (need > 1) fail(409, `Es ist nicht genug Platz: ${Math.max(0, meta.total - (n - need))} frei, du brauchst ${need} (mit Kind). Bitte den Organisator, die Teilnehmerzahl zu erhöhen.`);
     fail(409, 'Die Feier ist leider schon voll.');
   }
 
@@ -39,7 +46,7 @@ export default handle(async (req, res) => {
   const token = rid(20);
   const got = await redis('HSETNX', k(id, 'n'), nk, token);
   if (Number(got) !== 1) {
-    await redis('DECR', k(id, 'count'));
+    await redis('DECRBY', k(id, 'count'), need);
     fail(409, 'Diesen Namen gibt es schon in der Runde. Falls du das bist, tippe auf „Ich bin schon dabei". Sonst nimm bitte z. B. deinen Nachnamen dazu.');
   }
   try {
@@ -47,9 +54,12 @@ export default handle(async (req, res) => {
       ['HSET', k(id, 'p'), token, JSON.stringify(person)],
       ...['count', 'p', 'n'].map((x) => ['EXPIRE', k(id, x), TTL]),
     ]);
+    if (kidList.length) await createKids(id, token, kidList);
+    if (parentOf.length) await claimKids(id, token, parentOf);
   } catch (e) {
     await redis('HDEL', k(id, 'n'), nk).catch(() => {});
-    await redis('DECR', k(id, 'count')).catch(() => {});
+    await redis('HDEL', k(id, 'p'), token).catch(() => {});
+    await redis('DECRBY', k(id, 'count'), need).catch(() => {});
     throw e;
   }
   res.status(200).json({ token });
