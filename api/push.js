@@ -27,20 +27,24 @@ export default handle(async (req, res) => {
     if (!b.admin || b.admin !== meta.admin) fail(403, 'Nur der Organisator kann erinnern.');
     if (meta.status !== 'open') fail(409, 'Die Losung ist noch nicht freigegeben.');
     const flat = (await redis('HGETALL', k(id, 'p'))) || [];
-    let token = null;
+    let token = null, person = null;
     for (let i = 0; i < flat.length; i += 2) {
-      try { if (nameKey(JSON.parse(flat[i + 1]).name) === nameKey(b.name)) token = flat[i]; } catch {}
+      try { const pp = JSON.parse(flat[i + 1]); if (nameKey(pp.name) === nameKey(b.name)) { token = flat[i]; person = pp; } } catch {}
     }
     if (!token) fail(404, 'Diese Person gibt es nicht.');
     if (Number(await redis('HEXISTS', k(id, 'd'), token))) return res.status(200).json({ result: 'drawn' });
     const lock = await redis('SET', k(id, 'rl:' + token), '1', 'NX', 'EX', '600');
     if (lock !== 'OK') return res.status(200).json({ result: 'wait' });
+    // Kinder haben keine eigenen Benachrichtigungen – die Eltern werden erinnert
+    const isKid = !!(person && person.kid && Array.isArray(person.par) && person.par.length);
     const r = await notify(id, {
-      title: '🎄 Dein Wichtel-Los wartet noch',
-      body: `Der Organisator von „${meta.name}“ erinnert dich: Zieh jetzt dein Los und finde heraus, wen du beschenkst. 🎁`,
+      title: isKid ? `🎄 Das Wichtel-Los für ${person.name} wartet noch` : '🎄 Dein Wichtel-Los wartet noch',
+      body: isKid
+        ? `Der Organisator von „${meta.name}“ erinnert dich: Zieh jetzt das Los für ${person.name}. 🎁`
+        : `Der Organisator von „${meta.name}“ erinnert dich: Zieh jetzt dein Los und finde heraus, wen du beschenkst. 🎁`,
       url: `/?p=${id}`,
       tag: 'wichtel-remind-' + id,
-    }, [token]);
+    }, isKid ? person.par : [token]);
     return res.status(200).json({ result: r.sent ? 'sent' : 'nosub' });
   }
   fail(400, 'Unbekannte Aktion.');
