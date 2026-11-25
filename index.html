@@ -239,6 +239,35 @@
   .fade{animation:fade .45s ease both}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  [hidden]{display:none!important}
+  .kidbox{margin:6px 0 18px;border:1px solid rgba(232,194,122,.3);border-radius:18px;background:linear-gradient(135deg,rgba(232,194,122,.1),rgba(232,194,122,.03));overflow:hidden}
+  .kidtoggle{display:flex;gap:12px;align-items:center;width:100%;padding:14px 16px;background:none;border:0;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+  .kidtoggle .ic{font-size:26px;flex:0 0 32px;text-align:center}
+  .kidtoggle b{display:block;font-size:15px}
+  .kidtoggle small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4;margin-top:2px}
+  .kidtoggle .chev{margin-left:auto;font-size:22px;color:var(--gold);transition:transform .25s}
+  .kidbox.open .kidtoggle .chev{transform:rotate(45deg)}
+  .kidpanel{padding:2px 16px 14px}
+  .kidrow{position:relative;margin:10px 0;padding:14px;border-radius:16px;background:rgba(0,0,0,.2);border:1px solid var(--line);text-align:left}
+  .kidrow>label,.kidrow .row{margin:0 0 10px}
+  .kidrow .row{align-items:flex-end}
+  .kidrow .row label{margin-bottom:0}
+  .kidrow .kh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+  .kidrow .kh small{color:var(--muted);font-size:12.5px}
+  .kidrow .kx{position:absolute;top:8px;right:10px;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px}
+  .kidrow .acts{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+  .kidrow .acts .linkbtn{margin:0;font-size:13px;color:var(--muted)}
+  .kidcard .pill{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:999px;font-size:12px;background:rgba(232,194,122,.16);border:1px solid rgba(232,194,122,.4);color:var(--gold);vertical-align:middle;font-weight:500}
+  .kidask{margin:6px 0 12px;padding:14px;border-radius:16px;border:1px solid rgba(232,194,122,.45);background:rgba(232,194,122,.08)}
+  .kidask b{display:block;font-size:15px}
+  .kidask .row{margin-top:12px;align-items:center;gap:8px}
+  .kidask .row .btn{flex:0 0 auto}
+  .kidask .row .linkbtn{margin:0}
+  .kidask.is-kid{border-style:dashed;background:rgba(255,255,255,.03);border-color:var(--line)}
+  .kidres .eyebrow{margin-bottom:2px}
+  .kidres h2{margin-top:0}
+  .kidnote{padding:12px 14px}
+  .kidnote .always{margin:0}
 </style>
 </head>
 <body>
@@ -560,6 +589,7 @@
   /* ---------- Verwaltung (Ersteller) ---------- */
   let lastAdmin = '';
   const axOpen = new Set(); let axWrapOpen = false;
+  const kidNoLoad = () => { if (!kidNo) { try { kidNo = new Set(JSON.parse(LS.get('wichteln:kidno:' + PID) || '[]')); } catch { kidNo = new Set(); } } };
   async function adminView() {
     LS.set(admKey(PID), ADMIN);
     let s;
@@ -577,6 +607,7 @@
       const joined = !!LS.get(tokKey(PID));
       const set = s.settings;
       const sortedNames = [...s.names].sort((a, b) => a.localeCompare(b, 'de'));
+      kidNoLoad();
       let action, settingsCard = '';
       if (s.status === 'open') {
         const done = isDone(s);
@@ -606,8 +637,8 @@
           <p class="hint" style="margin:12px 0 12px">Nur für dich sichtbar – die Teilnehmer erfahren nichts davon. Die Animation mischt weiterhin alle Namen, aber gezogen wird nie jemand, den du hier abgewählt hast.</p>
           ${s.names.length < 3 ? `<p class="hint">Sobald sich mehr Leute eingetragen haben, kannst du das hier einstellen.</p>` : sortedNames.map(g => {
             const sel = (s.adminEx || {})[g] || [];
-            return `<details class="axp" data-g="${esc(g)}" ${axOpen.has(g) ? 'open' : ''}><summary><span>${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
-              <small style="color:var(--muted)">${esc(g)} darf nicht ziehen:</small><div class="chips" style="justify-content:flex-start">${sortedNames.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div></details>`;
+            return `<details class="axp" data-g="${esc(g)}" ${axOpen.has(g) ? 'open' : ''}><summary><span>${(s.adminKids || {})[g] ? '👶 ' : ''}${esc(g)}</span><em>${sel.length ? sel.length + ' ausgeschlossen' : 'keine'}</em></summary>
+              <small style="color:var(--muted)">${esc(g)} darf nicht ziehen:</small><div class="chips" style="justify-content:flex-start">${sortedNames.filter(n => n !== g).map(n => `<button type="button" class="chip${sel.includes(n) ? ' on' : ''}" data-ax="${esc(n)}">${esc(n)}</button>`).join('')}</div>${kidBlock(g, sel, s)}</details>`;
           }).join('')}
           <p class="err" id="axerr"></p>
           </details>
@@ -675,13 +706,37 @@
       if (aw) aw.addEventListener('toggle', () => { axWrapOpen = aw.open; });
       app.querySelectorAll('details.axp').forEach(d => {
         d.addEventListener('toggle', () => { d.open ? axOpen.add(d.dataset.g) : axOpen.delete(d.dataset.g); });
+        const g = d.dataset.g, kask = d.querySelector('[data-kask]'), kbox = kask && kask.querySelector('[data-kpar]'), kerr = d.querySelector('[data-kerr]');
+        const off = new Set();
+        const refreshAsk = () => {
+          if (!kask) return;
+          const on = [...d.querySelectorAll('[data-ax].on')].map(y => y.dataset.ax);
+          kask.hidden = !on.length || kidNo.has(g);
+          kbox.innerHTML = on.map(n => `<button type="button" class="chip${off.has(n) ? '' : ' sel'}" data-kp="${esc(n)}">${esc(n)}</button>`).join('');
+          kbox.querySelectorAll('[data-kp]').forEach(b => b.onclick = () => { const n = b.dataset.kp; off.has(n) ? off.delete(n) : off.add(n); b.classList.toggle('sel', !off.has(n)); });
+        };
+        refreshAsk();
+        if (kask) {
+          kask.querySelector('[data-kyes]').onclick = async () => {
+            const parents = [...kbox.querySelectorAll('[data-kp].sel')].map(b => b.dataset.kp);
+            if (!parents.length) { kerr.textContent = 'Bitte wähle mindestens einen Elternteil.'; return; }
+            try { await post('kids', { action: 'convert', id: PID, admin: ADMIN, name: g, parents }); toast(`${g} ist jetzt ein Kinderprofil 👶`); lastAdmin = ''; stopPoll(); adminView(); }
+            catch (e) { kerr.textContent = e.message; }
+          };
+          kask.querySelector('[data-kno]').onclick = () => { kidNo.add(g); LS.set('wichteln:kidno:' + PID, JSON.stringify([...kidNo])); kask.hidden = true; };
+        }
+        const undo = d.querySelector('[data-kundo]');
+        if (undo) undo.onclick = async () => {
+          try { await post('kids', { action: 'convert', id: PID, admin: ADMIN, name: g, kid: false }); toast(`${g} ist wieder ein normales Profil`); lastAdmin = ''; stopPoll(); adminView(); }
+          catch (e) { kerr.textContent = e.message; }
+        };
         d.querySelectorAll('[data-ax]').forEach(c => c.onclick = async () => {
-          c.classList.toggle('on');
+          c.classList.toggle('on'); refreshAsk();
           const ex = {};
           app.querySelectorAll('details.axp').forEach(x => { const l = [...x.querySelectorAll('[data-ax].on')].map(y => y.dataset.ax); if (l.length) ex[x.dataset.g] = l; });
           d.querySelector('summary em').textContent = d.querySelectorAll('[data-ax].on').length ? d.querySelectorAll('[data-ax].on').length + ' ausgeschlossen' : 'keine';
           try { await post('settings', { id: PID, admin: ADMIN, ex }); document.getElementById('axerr').textContent = ''; }
-          catch (e) { document.getElementById('axerr').textContent = e.message; c.classList.toggle('on'); }
+          catch (e) { document.getElementById('axerr').textContent = e.message; c.classList.toggle('on'); refreshAsk(); }
         });
       });
       app.querySelectorAll('[data-rem]').forEach(b => b.onclick = async () => {
@@ -742,11 +797,137 @@
     joinView(s, foot);
   }
 
+  /* ---------- Kinderprofile ---------- */
+  let kidFresh = null, kidTimer, kidNo = null;
+  function kidFields(set, k) {
+    return (set.useColor || set.useLetter) ? `<div class="row">
+      ${set.useColor ? `<label class="color-field" style="flex:2">Farbe<input name="color" maxlength="30" placeholder="z. B. Tannengrün" value="${esc(k.color || '')}"><span class="dot" style="background:${colorCss(k.color || '') || 'transparent'}"></span></label>` : ''}
+      ${set.useLetter ? `<label class="letter-input" style="flex:1">Buchstabe<input name="letter" maxlength="2" placeholder="A" value="${esc(k.letter || '')}"></label>` : ''}
+    </div>` : '';
+  }
+  function wireFields(root) {
+    root.querySelectorAll('.color-field input').forEach(i => { i.oninput = () => { const d = i.parentElement.querySelector('.dot'); d.style.background = colorCss(i.value) || 'transparent'; }; });
+    root.querySelectorAll('.letter-input input').forEach(i => { i.oninput = () => { const ch = [...i.value.trim()].pop() || ''; i.value = ch.toLocaleUpperCase('de-DE').slice(0, 1); }; });
+  }
+  function kidDrawBody(s, name, d) {
+    const set = s.settings, { color, letter, target, joker, loser } = d;
+    const known = colorCss(color);
+    const tiles = !joker && ((color ? 1 : 0) + (letter ? 1 : 0));
+    const exText = !joker && letter ? example(letter, color, name) : '';
+    const others = Math.max(0, s.total - 1);
+    return `${target ? `<div class="who"><span class="lbl">${esc(name)} beschenkt</span><div class="nm">${esc(target)}</div><span class="em">🎁</span></div>` : ''}
+      ${joker ? `<div class="banner joker"><span class="ic">🃏</span><div><b>${esc(name)} hat den Joker!</b><p>${target ? `${esc(name)} sucht das Geschenk für ${esc(target)} ganz frei aus – ohne Farbe, ohne Buchstabe, ohne Regeln.` : `${esc(name)} sucht sich das Geschenk ganz frei aus.`} Verratet es aber niemandem, bis ihr schenkt.</p></div></div>` : ''}
+      ${tiles ? `<div class="reveal ${tiles === 1 ? 'single' : ''}">
+        ${color ? `<div class="tile"><span class="lbl">Farbe</span><div class="swatch ${known ? '' : 'unknown'}" ${swatchStyle(color)}></div><div class="cname">${esc(color)}</div></div>` : ''}
+        ${letter ? `<div class="tile"><span class="lbl">Buchstabe</span><div class="bigletter">${esc(letter)}</div></div>` : ''}
+      </div>` : ''}
+      ${exText ? `<div class="example"><p class="t">💡 Geschenktipp</p><p class="ex" style="margin:0">${esc(exText)}</p></div>` : ''}
+      ${loser ? `<div class="banner angel"><span class="ic">😇</span><div><b>${esc(name)} ist der Engel!</b><p>Zusätzlich zum Geschenk bringt ${esc(name)} für alle anderen (${others} ${others === 1 ? 'Person' : 'Personen'}) je eine Kleinigkeit mit, höchstens 1–2 € pro Person. ✨</p></div></div>` : ''}
+      ${set.budget ? `<div class="budget"><span>💶</span><div><b>Budget: bis ${set.budget} €</b><small>pro Geschenk – zur Orientierung</small></div></div>` : ''}`;
+  }
+  function kidsHtml(s, me) {
+    const set = s.settings;
+    if (me.kid) {
+      return `<section class="card kidnote"><div class="always"><span class="oi">👨‍👩‍👧</span><span><b>Dein Profil wird mitverwaltet</b>${esc((me.parents || []).join(' und '))} können für dich ziehen${set.useColor || set.useLetter ? ' und Farbe oder Buchstabe einwerfen' : ''} – das Los ist für alle gleich.</span></div></section>`;
+    }
+    const mine = me.kids || [];
+    if (s.status === 'open') {
+      return mine.map(k => k.draw
+        ? `<section class="card center kidres ${kidFresh === k.name ? 'revealed' : 'fade'}"><p class="eyebrow">Los für</p><h2>${esc(k.name)} 🧒</h2>${kidDrawBody(s, k.name, k.draw)}${k.co.length ? `<p class="hint">Gemeinsam verwaltet mit ${esc(k.co.join(', '))}.</p>` : ''}</section>`
+        : `<section class="card center kidres"><span class="gift">🎁</span><h2>Los für ${esc(k.name)}</h2><p class="lead">Zieh jetzt für ${esc(k.name)}. Das Ergebnis sehen alle Eltern von ${esc(k.name)} – gezogen wird nur einmal.</p><button class="btn gold" data-kdraw="${esc(k.name)}">✦ Für ${esc(k.name)} ziehen</button>${k.co.length ? `<p class="hint">Gemeinsam verwaltet mit ${esc(k.co.join(', '))}.</p>` : ''}<p class="err"></p></section>`).join('');
+    }
+    // Sammelphase: Kinder verwalten, hinzufügen, als weiterer Elternteil eintragen
+    const mineN = new Set(mine.map(k => k.name));
+    const others = (s.kids || []).filter(n => !mineN.has(n) && n !== me.name);
+    const free = s.total - s.count;
+    return `<section class="card" id="kids">
+      <h2>👨‍👩‍👧 Kinder</h2>
+      <p class="hint" style="margin:0 0 6px">${mine.length ? 'Du verwaltest diese Profile: Du wirfst' + (set.useColor || set.useLetter ? ' ' + [set.useColor && 'Farbe', set.useLetter && 'Buchstabe'].filter(Boolean).join(' und ') + ' für das Kind in den Topf und ziehst später auch für das Kind.' : ' später das Los für das Kind.') : 'Du kannst ein Kind anmelden und das Profil verwalten: Du ziehst später auch für das Kind – direkt unter deinem eigenen Los.'}</p>
+      ${mine.map(k => `<div class="kidrow kidcard" data-k="${esc(k.name)}">
+        <div class="kh"><b>${esc(k.name)}</b>${k.co.length ? `<small>mit ${esc(k.co.join(', '))}</small>` : ''}</div>
+        ${kidFields(set, k)}
+        <div class="acts">${set.useColor || set.useLetter ? `<button class="btn small" type="button" data-kedit>Speichern</button>` : '<span></span>'}<button class="linkbtn" type="button" data-kdrop>${k.co.length ? 'Nicht mehr verwalten' : 'Kind entfernen'}</button></div>
+        <p class="err" data-kerr></p></div>`).join('')}
+      <div class="kidbox" id="kadd"><button type="button" class="kidtoggle"><span class="ic">➕</span><span><b>${mine.length ? 'Weiteres Kind anmelden' : 'Ein Kind anmelden'}</b><small>Es belegt einen eigenen Platz${free >= 0 ? ` (noch ${free} frei)` : ''}.</small></span><span class="chev">+</span></button>
+        <div class="kidpanel" hidden><form autocomplete="off"><label>Name des Kindes<input name="name" maxlength="40" placeholder="Vorname" required></label>${kidFields(set, {})}<button class="btn primary" type="submit">Kind anmelden</button><p class="err"></p></form></div></div>
+      ${others.length ? `<div class="kidbox" id="kclaim"><button type="button" class="kidtoggle"><span class="ic">🤝</span><span><b>Ich bin auch Elternteil von …</b><small>Dann verwaltet ihr das Profil gemeinsam.</small></span><span class="chev">+</span></button>
+        <div class="kidpanel" hidden><div class="chips" style="justify-content:flex-start">${others.map(n => `<button type="button" class="chip" data-kc="${esc(n)}">${esc(n)}</button>`).join('')}</div><button class="btn primary" type="button" id="kcgo" style="margin-top:12px" disabled>Als Elternteil eintragen</button><p class="err"></p></div></div>` : ''}
+    </section>`;
+  }
+  function wireKids(s, me) {
+    const token = LS.get(tokKey(PID));
+    const reload = () => { lastPart = ''; exSet = null; participantView(); };
+    if (kidFresh) { const nm = kidFresh; kidFresh = null; if ((me.kids || []).some(k => k.name === nm && k.draw)) burst(); }
+    app.querySelectorAll('[data-kdraw]').forEach(btn => btn.onclick = async () => {
+      const nm = btn.dataset.kdraw; const err = btn.parentElement.querySelector('.err');
+      btn.disabled = true; btn.textContent = '✨ Es wird gezogen …'; err.textContent = '';
+      try { await Promise.all([post('draw', { id: PID, token, kid: nm }), sleep(1800)]); kidFresh = nm; participantView(); }
+      catch (e) { err.textContent = e.message; btn.disabled = false; btn.textContent = `✦ Für ${nm} ziehen`; }
+    });
+    const root = document.getElementById('kids'); if (!root) return;
+    wireFields(root);
+    root.querySelectorAll('.kidbox').forEach(b => {
+      const t = b.querySelector('.kidtoggle'), pn = b.querySelector('.kidpanel');
+      t.onclick = () => { pn.hidden = !pn.hidden; b.classList.toggle('open', !pn.hidden); const i = pn.querySelector('input'); if (!pn.hidden && i) i.focus(); };
+    });
+    root.querySelectorAll('.kidrow[data-k]').forEach(row => {
+      const nm = row.dataset.k, err = row.querySelector('[data-kerr]');
+      const ed = row.querySelector('[data-kedit]');
+      if (ed) ed.onclick = async () => {
+        ed.disabled = true; err.textContent = '';
+        try { await post('kids', { action: 'edit', id: PID, token, kid: nm, color: row.querySelector('[name=color]')?.value, letter: row.querySelector('[name=letter]')?.value }); toast(`${nm} ist aktualisiert 🎁`); lastPart = ''; ed.disabled = false; }
+        catch (e) { err.textContent = e.message; ed.disabled = false; }
+      };
+      row.querySelector('[data-kdrop]').onclick = async (ev) => {
+        const b = ev.currentTarget;
+        if (!b.dataset.arm) { b.dataset.arm = 1; const t0 = b.textContent; b.textContent = 'Wirklich?'; setTimeout(() => { delete b.dataset.arm; b.textContent = t0; }, 3000); return; }
+        try { await post('kids', { action: 'drop', id: PID, token, kid: nm }); reload(); } catch (e) { err.textContent = e.message; }
+      };
+    });
+    const form = root.querySelector('#kadd form');
+    if (form) form.onsubmit = async e => {
+      e.preventDefault();
+      const err = form.querySelector('.err'), btn = form.querySelector('button[type=submit]');
+      btn.disabled = true; err.textContent = '';
+      try { await post('kids', { action: 'add', id: PID, token, kids: [{ name: form.name.value, color: form.color?.value, letter: form.letter?.value }] }); toast('Kind angemeldet 🎁'); reload(); }
+      catch (ex) { err.textContent = ex.message; btn.disabled = false; }
+    };
+    const sel = new Set(); const go = root.querySelector('#kcgo');
+    root.querySelectorAll('[data-kc]').forEach(c => c.onclick = () => { const n = c.dataset.kc; sel.has(n) ? sel.delete(n) : sel.add(n); c.classList.toggle('sel', sel.has(n)); go.disabled = !sel.size; });
+    if (go) go.onclick = async () => {
+      const err = go.parentElement.querySelector('.err'); go.disabled = true; err.textContent = '';
+      try { await post('kids', { action: 'claim', id: PID, token, names: [...sel] }); toast('Du verwaltest das Profil jetzt mit 🎁'); reload(); }
+      catch (e) { err.textContent = e.message; go.disabled = false; }
+    };
+  }
+  // Wenn der andere Elternteil für das Kind gezogen hat, wird das hier angezeigt
+  function kidWatch(s, me) {
+    clearTimeout(kidTimer);
+    const pend = (me.kids || []).filter(k => !k.draw).map(k => k.name);
+    if (s.status !== 'open' || !pend.length) return;
+    const tick = async () => {
+      try {
+        const t = await status({ token: LS.get(tokKey(PID)) });
+        if ((t.me && t.me.kids || []).some(k => k.draw && pend.includes(k.name))) return participantView();
+      } catch (e) { if (e.status === 410) return errorView(e.message); }
+      kidTimer = setTimeout(tick, 8000);
+    };
+    kidTimer = setTimeout(tick, 8000);
+  }
+  // Organisator: Kinderprofil-Frage im Bereich „Wer darf wen nicht ziehen?“
+  function kidBlock(g, sel, s) {
+    const ak = (s.adminKids || {})[g];
+    if (ak) return `<div class="kidask is-kid"><b>👶 Kinderprofil</b><p class="hint" style="margin:4px 0 0">Verwaltet von ${esc(ak.parents.join(', '))}. Diese Personen ziehen für ${esc(g)}${s.settings.useColor || s.settings.useLetter ? ' und werfen Farbe bzw. Buchstabe ein' : ''}.</p>${ak.conv ? `<button class="linkbtn" type="button" data-kundo style="margin:8px 0 0;text-align:left">Zurück zum normalen Profil</button><p class="err" data-kerr style="text-align:left;margin:4px 0 0"></p>` : ''}</div>`;
+    return `<div class="kidask" data-kask ${sel.length && !kidNo.has(g) ? '' : 'hidden'}><b>👶 Ist ${esc(g)} ein Kind?</b><p class="hint" style="margin:4px 0 10px">Dann verwalten die gewählten Personen das Profil: Sie ziehen für ${esc(g)}${s.settings.useColor || s.settings.useLetter ? ' und werfen Farbe bzw. Buchstabe ein' : ''}. Wer verwaltet das Profil?</p><div class="chips" data-kpar style="justify-content:flex-start;margin:0">${sel.map(n => `<button type="button" class="chip sel" data-kp="${esc(n)}">${esc(n)}</button>`).join('')}</div><div class="row"><button class="btn small gold" type="button" data-kyes>Ja, Kinderprofil</button><button class="linkbtn" type="button" data-kno>Nein</button></div><p class="err" data-kerr style="text-align:left"></p></div>`;
+  }
+
   function waitingView(s, me, foot) {
     const set = s.settings;
     const max = Math.max(0, s.total - 3);
     if (exSet === null) exSet = new Set(me.excluded || []);
-    const sig = JSON.stringify({ c: s.count, t: s.total, n: s.names, st: s.status, se: s.settings });
+    const sig = JSON.stringify({ c: s.count, t: s.total, n: s.names, st: s.status, se: s.settings, k: me.kids, kl: s.kids, mk: me.kid });
+    const ae = document.activeElement;
+    if (sig !== lastPart && ae && ae.closest && ae.closest('#kids')) { schedule(participantView); return; } // nicht mitten im Tippen neu zeichnen
     if (sig !== lastPart) {
       lastPart = sig;
       const others = s.names.filter(n => n !== me.name);
@@ -760,11 +941,13 @@
           ${chips(s.names, s.total)}
         </section>
         ${pick}
+        ${kidsHtml(s, me)}
         <section class="card">
           <h2>Das wird gelost</h2>
           ${rulesHtml(set, s.total)}
           <p class="hint box" style="margin-top:16px">🔑 Merk dir deine PIN. Wenn du das Gerät wechselst: Link öffnen → „Ich bin schon dabei“ → Name und PIN.</p>
         </section>${foot}`;
+      wireKids(s, me);
       const updInfo = () => {
         const el = document.getElementById('exinfo'); if (!el) return;
         el.textContent = exSet.size ? `${exSet.size} von höchstens ${max} abgewählt` : `Du kannst bis zu ${max} Personen abwählen.`;
@@ -801,6 +984,9 @@
           ${set.useColor ? `<label class="color-field" style="flex:2">Eine Farbe<input name="color" maxlength="30" placeholder="z. B. Tannengrün" required><span class="dot"></span></label>` : ''}
           ${set.useLetter ? `<label class="letter-input" style="flex:1">Buchstabe<input name="letter" maxlength="2" placeholder="A" required></label>` : ''}
         </div>` : ''}
+        <div class="kidbox" id="kidbox"><button type="button" class="kidtoggle" id="kidtoggle"><span class="ic">👨‍👩‍👧</span><span><b>Ich melde auch ein Kind an</b><small>Du verwaltest dann das Profil: Du ${set.useColor || set.useLetter ? 'wirfst ' + [set.useColor && 'Farbe', set.useLetter && 'Buchstabe'].filter(Boolean).join(' und ') + ' für das Kind ein und ' : ''}ziehst später auch für das Kind – direkt unter deinem eigenen Los. Jedes Kind belegt einen Platz.</small></span><span class="chev">+</span></button>
+          <div class="kidpanel" id="kidpanel" hidden><div id="kidrows"></div><button type="button" class="linkbtn" id="addkid" style="margin-top:4px">+ Weiteres Kind hinzufügen</button><p class="hint" id="kidinfo" style="text-align:center"></p></div></div>
+        ${(s.kids || []).length ? `<div class="kidbox open" id="parbox" style="padding:14px 16px"><p class="sub" style="margin:0 0 4px"><b>Bist du auch Elternteil von …?</b></p><p class="hint" style="margin:0 0 8px">Dann verwaltet ihr das Profil gemeinsam und beide könnt für das Kind ziehen.</p><div class="chips" id="parof" style="justify-content:flex-start;margin:0">${s.kids.map(n => `<button type="button" class="chip" data-par="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>` : ''}
         <label class="pin">Deine PIN (4 Ziffern)<input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required></label>
         <p class="hint" style="margin:-6px 0 18px">🔑 Merk dir die PIN. Damit kommst du später auch mit einem anderen Handy oder Browser wieder rein.</p>
         <button class="btn primary" type="submit">In den Topf werfen 🎁</button>
@@ -818,13 +1004,37 @@
     f.pin.oninput = () => { f.pin.value = f.pin.value.replace(/\D/g, '').slice(0, 4); };
     const tc = document.getElementById('toClaim');
     if (tc) tc.onclick = () => { claimMode = true; claimView(s, foot, true); };
+    // Kinder mit anmelden / Elternteil eines bestehenden Kindes sein
+    const kb = document.getElementById('kidbox'), kp = document.getElementById('kidpanel'), kr = document.getElementById('kidrows'), ki = document.getElementById('kidinfo');
+    const parSel = new Set();
+    const kidInfo = () => {
+      const n = kr.querySelectorAll('.kidrow').length, need = 1 + n, free = s.total - s.count;
+      ki.textContent = n ? (need > free ? `⚠️ Du brauchst ${need} Plätze, aber nur ${Math.max(0, free)} ${free === 1 ? 'ist' : 'sind'} frei – frag den Organisator, ob er die Teilnehmerzahl erhöht.` : `Du belegst ${need} Plätze (du und ${n === 1 ? 'ein Kind' : n + ' Kinder'}).`) : '';
+    };
+    const addRow = () => {
+      const row = document.createElement('div'); row.className = 'kidrow';
+      row.innerHTML = `<button type="button" class="kx" aria-label="Kind entfernen">×</button><label>Name des Kindes<input name="kname" maxlength="40" placeholder="Vorname"></label>${kidFields(set, {})}`;
+      row.querySelectorAll('[name=color]').forEach(i => { i.name = 'kcolor'; }); row.querySelectorAll('[name=letter]').forEach(i => { i.name = 'kletter'; }); // eigene Namen, damit sie das Formular nicht stören
+      kr.appendChild(row); wireFields(row);
+      row.querySelector('.kx').onclick = () => { row.remove(); if (!kr.children.length) { kp.hidden = true; kb.classList.remove('open'); } kidInfo(); };
+      kidInfo(); return row;
+    };
+    document.getElementById('kidtoggle').onclick = () => {
+      if (kp.hidden) { kp.hidden = false; kb.classList.add('open'); if (!kr.children.length) addRow().querySelector('input').focus(); }
+      else { kp.hidden = true; kb.classList.remove('open'); kr.innerHTML = ''; kidInfo(); }
+    };
+    document.getElementById('addkid').onclick = () => addRow().querySelector('input').focus();
+    app.querySelectorAll('#parof [data-par]').forEach(c => c.onclick = () => { const n = c.dataset.par; parSel.has(n) ? parSel.delete(n) : parSel.add(n); c.classList.toggle('sel', parSel.has(n)); });
     f.onsubmit = async e => {
       e.preventDefault();
       const btn = f.querySelector('button[type=submit]'); const err = f.querySelector('.err');
       btn.disabled = true; err.textContent = '';
       try {
         if (f.color && /^(bunt\w*|mehrfarbig\w*|multi\s?colou?r\w*|regenbogen\w*|rainbow)$/i.test(f.color.value.trim())) { err.textContent = 'Bunt gilt nicht – bitte wähle eine einzelne Farbe.'; btn.disabled = false; return; }
-        const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value });
+        const kids = [...kr.querySelectorAll('.kidrow')].map(r => ({ name: r.querySelector('[name=kname]').value, color: r.querySelector('[name=kcolor]')?.value, letter: r.querySelector('[name=kletter]')?.value }));
+        if (kids.some(k => !k.name.trim())) { err.textContent = 'Bitte gib dem Kind einen Namen – oder entferne die leere Zeile mit ×.'; btn.disabled = false; return; }
+        if (kids.some(k => k.color && /^(bunt\w*|mehrfarbig\w*|multi\s?colou?r\w*|regenbogen\w*|rainbow)$/i.test(k.color.trim()))) { err.textContent = 'Bunt gilt nicht – bitte wähle eine einzelne Farbe.'; btn.disabled = false; return; }
+        const d = await post('join', { id: PID, name: f.name.value, color: f.color?.value, letter: f.letter?.value, pin: f.pin.value, ...(kids.length ? { kids } : {}), ...(parSel.size ? { parentOf: [...parSel] } : {}) });
         LS.set(tokKey(PID), d.token);
         lastPart = ''; exSet = null; pushSynced = false; setManifest();
         if (LS.get(admKey(PID))) { try { await status({ token: d.token, admin: LS.get(admKey(PID)) }); } catch {} location.href = adminLinkFor(PID, LS.get(admKey(PID))); return; }
@@ -892,7 +1102,8 @@
       <p class="lead">${esc(me.name)}, zieh jetzt ${what}. Was du ziehst, kann niemand anderes mehr bekommen.</p>
       <button class="btn gold" id="draw">✦ Jetzt ziehen</button>
       <p class="err"></p>
-    </section>${foot}`;
+    </section>${kidsHtml(s, me)}${foot}`;
+    wireKids(s, me); kidWatch(s, me);
     const btn = document.getElementById('draw');
     btn.onclick = async () => {
       btn.disabled = true;
@@ -993,7 +1204,8 @@
       ${set.budget ? `<div class="budget"><span>💶</span><div><b>Budget: bis ${set.budget} €</b><small>pro Geschenk – zur Orientierung</small></div></div>` : ''}
       <div id="alldone">${isDone(s) ? doneBanner() : ''}</div>
       <p class="hint">Psst – nicht verraten! Auf einem anderen Gerät: Link öffnen → „Ich bin schon dabei“ → Name und PIN, dann siehst du dein Los wieder.</p>
-    </section>${foot}`;
+    </section>${kidsHtml(s, me)}${foot}`;
+    wireKids(s, me); kidWatch(s, me);
     if (joker) jokerHelp(set);
     if (!isDone(s)) watchDone();
     if (fresh) {
