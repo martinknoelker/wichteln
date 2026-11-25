@@ -21,7 +21,16 @@ export default handle(async (req, res) => {
     const count = Number(await redis('HLEN', k(id, 'p')));
     if (count > 0) fail(409, 'Farbe und Buchstabe lassen sich nicht mehr ändern, sobald jemand eingereicht hat.');
   }
+  // Teilnehmerzahl: bis zur Freigabe frei änderbar, aber nie unter die Zahl der schon Angemeldeten
+  let total = null;
+  if (b.total !== undefined && b.total !== null && b.total !== '') {
+    total = parseInt(b.total, 10);
+    if (!(total >= 2 && total <= 50)) fail(400, 'Die Teilnehmerzahl muss zwischen 2 und 50 liegen.');
+    const have = Number(await redis('HLEN', k(id, 'p')));
+    if (total < have) fail(409, `Es sind schon ${have} Personen dabei – weniger geht nicht.`);
+  }
   const fields = ['useColor', flag(next.useColor), 'useLetter', flag(next.useLetter), 'joker', flag(next.joker), 'loser', flag(next.loser), 'budget', next.budget];
+  if (total !== null) fields.push('total', total);
   // Geheime Ausschlüsse des Organisators: { "Name": ["Name", …] } → nameKeys
   if (b.ex && typeof b.ex === 'object') {
     const ax = {};
@@ -33,5 +42,5 @@ export default handle(async (req, res) => {
     fields.push('ax', JSON.stringify(ax));
   }
   await redis('HSET', k(id, 'meta'), ...fields);
-  res.status(200).json({ settings: next });
+  res.status(200).json({ settings: next, total: total ?? meta.total });
 });
