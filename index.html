@@ -596,6 +596,9 @@
           <label style="margin-top:16px">💶 Budget pro Geschenk in € <small style="color:var(--muted)">(leer = keins)</small>
             <input id="budget" type="number" min="1" max="10000" inputmode="numeric" placeholder="z. B. 15" value="${set.budget || ''}"></label>
           <p class="hint" style="margin-top:6px">Wird jedem nach der Ziehung als Orientierung angezeigt.</p>
+          <label style="margin-top:16px">👥 Teilnehmerzahl <small style="color:var(--muted)">(mindestens ${Math.max(2, s.count)})</small>
+            <div class="stepper"><button type="button" data-td="-1" aria-label="weniger">−</button><input id="totalset" type="number" min="${Math.max(2, s.count)}" max="50" value="${s.total}" inputmode="numeric"><button type="button" data-td="1" aria-label="mehr">+</button></div></label>
+          <p class="hint" style="margin-top:6px">Noch jemand dazugekommen? Erhöhe die Zahl – wer schon dabei ist, bleibt drin, und weitere können sich über den normalen Teilnehmer-Link eintragen.</p>
           <p class="err" id="seterr"></p>
         </section>
         <section class="card">
@@ -646,6 +649,23 @@
         try { await post('settings', body); lastAdmin = ''; stopPoll(); adminView(); }
         catch (e) { document.getElementById('seterr').textContent = e.message; lastAdmin = ''; schedule(adminView, 1500); }
       });
+      const tot = document.getElementById('totalset');
+      if (tot) {
+        const lo = Math.max(2, s.count);
+        let tt = null;
+        const clampT = () => Math.min(50, Math.max(lo, parseInt(tot.value, 10) || s.total));
+        const saveT = () => {
+          clearTimeout(tt);
+          tt = setTimeout(async () => {
+            const v = clampT(); tot.value = v;
+            if (v === s.total) return;
+            try { await post('settings', { id: PID, admin: ADMIN, total: v }); toast(`Teilnehmerzahl: ${v} 👥`); document.getElementById('seterr').textContent = ''; lastAdmin = ''; stopPoll(); adminView(); }
+            catch (e) { document.getElementById('seterr').textContent = e.message; tot.value = s.total; }
+          }, 700);
+        };
+        app.querySelectorAll('[data-td]').forEach(bn => bn.onclick = () => { tot.value = Math.min(50, Math.max(lo, (parseInt(tot.value, 10) || s.total) + Number(bn.dataset.td))); saveT(); });
+        tot.onchange = saveT;
+      }
       const bud = document.getElementById('budget');
       if (bud) bud.onchange = async () => {
         try { await post('settings', { id: PID, admin: ADMIN, budget: bud.value }); toast(bud.value ? `Budget: ${bud.value} € 💶` : 'Kein Budget'); document.getElementById('seterr').textContent = ''; }
