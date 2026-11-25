@@ -29,6 +29,7 @@ export default handle(async (req, res) => {
   const raw = await redis('HGET', k(id, 'p'), token);
   if (!raw) fail(404, 'Zu diesem Namen gibt es keine Anmeldung.');
   const p = JSON.parse(raw);
+  if (p.kid && !p.pin) fail(409, 'Kinderprofile werden von den Eltern verwaltet – bitte über das Profil eines Elternteils.');
   if (!p.pin) fail(409, 'Diese Anmeldung stammt aus einer älteren Version und hat keine PIN. Bitte den Ersteller um einen persönlichen Link.');
   if (!sameHash(p.pin, hashPin(id, nk, pin))) fail(403, `Die PIN stimmt nicht. (${Math.max(0, 6 - tries)} Versuche übrig)`);
 
